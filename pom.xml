@@ -3,12 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <modules>
-        <module>dubbo-demo-api</module>
-        <module>dubbo-demo-provider</module>
-        <module>dubbo-demo-consumer</module>
-        <module>dubbo-demo-api</module>
         <module>springboot-dubbo</module>
+        <module>elasticsearch</module>
+        <module>other</module>
+        <module>springboot-activemq</module>
     </modules>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -63,11 +63,5 @@
             <!--			</exclusions>-->
         </dependency>
 
-
-
-
-
     </dependencies>
-
-
 </project>
