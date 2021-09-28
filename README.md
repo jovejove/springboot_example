@@ -2,4 +2,4 @@
 
 ## test
 
-## git merge --ff-no dev
+## git merge --no-ff dev
