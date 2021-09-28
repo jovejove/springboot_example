@@ -6,13 +6,14 @@
         <groupId>com.panda</groupId>
         <artifactId>springboot-dubbo</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.example</groupId>
     <artifactId>dubbo-demo-consumer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>dubbo-demo-consumer</name>
     <description>dubbo-demo-consumer</description>
+
     <properties>
         <java.version>1.8</java.version>
         <spring-boot.version>2.2.1.RELEASE</spring-boot.version>

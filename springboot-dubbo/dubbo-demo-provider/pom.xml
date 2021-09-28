@@ -2,17 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>com.panda</groupId>
         <artifactId>springboot-dubbo</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
+
     <groupId>com.example</groupId>
     <artifactId>dubbo-demo-provider</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>dubbo-demo-provider</name>
     <description>dubbo-demo-provider</description>
+
     <properties>
         <java.version>1.8</java.version>
         <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
@@ -48,8 +50,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.panda</groupId>
             <artifactId>dubbo-demo-api</artifactId>
+            <groupId>com.panda</groupId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
