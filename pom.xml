@@ -8,6 +8,7 @@
         <module>other</module>
         <module>springboot-activemq</module>
         <module>dsa</module>
+        <module>spring_cloud</module>
     </modules>
 
     <parent>
