@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.mybatis.mapper.UserMapper">
+
+    <select id="selectByUserId" resultType="com.example.mybatis.entity.User">
+        select *
+        from user
+        where id = #{id}
+        order by id
+    </select>
+
+
+    <select id="selectByUserIds" resultType="com.example.mybatis.entity.User">
+        select *
+        from user
+        where id in
+        <foreach collection="list" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+        order by id desc
+    </select>
+
+    <select id="selectAll" resultType="com.example.mybatis.entity.User">
+        select *
+        from user
+        order by id desc
+    </select>
+</mapper>
