@@ -53,12 +53,12 @@ public class QueryInterceptor implements Interceptor {
             boundSql = (BoundSql) args[5];
         }
         //TODO 自己要进行的各种处理
-        handleOriginSqlAddAuthCondition(mappedStatement, boundSql,"1");
+        handleOriginSqlAddAuthCondition(mappedStatement, boundSql, "1");
         //注：下面的方法可以根据自己的逻辑调用多次，在分页插件中，count 和 page 各调用了一次
         return executor.query(mappedStatement, parameter, rowBounds, resultHandler, cacheKey, boundSql);
     }
 
-    private void handleOriginSqlAddAuthCondition(MappedStatement mappedStatement, BoundSql boundSql,String authSqlCondition) throws Exception {
+    private void handleOriginSqlAddAuthCondition(MappedStatement mappedStatement, BoundSql boundSql, String authSqlCondition) throws Exception {
         Class<?> classType = Class.forName(mappedStatement.getId().substring(0, mappedStatement.getId().lastIndexOf(".")));
         String mName = mappedStatement.getId().substring(mappedStatement.getId().lastIndexOf(".") + 1, mappedStatement.getId().length());
         String count = "_COUNT";
@@ -67,7 +67,7 @@ public class QueryInterceptor implements Interceptor {
             if (method.isAnnotationPresent(InterceptAnnotation.class) && (mName.equals(method.getName()) || mName.equals(method.getName() + count))) {
                 InterceptAnnotation interceptorAnnotation = method.getAnnotation(InterceptAnnotation.class);
                 if (interceptorAnnotation.intercept()) {
-                        generateSqlWithAuthCondition(boundSql,authSqlCondition,interceptorAnnotation.tableName(),interceptorAnnotation.authField());
+                    generateSqlWithAuthCondition(boundSql, authSqlCondition, interceptorAnnotation.tableName(), interceptorAnnotation.authField());
                 }
             }
         }
@@ -83,7 +83,7 @@ public class QueryInterceptor implements Interceptor {
     }
 
 
-    private void generateSqlWithAuthCondition(BoundSql boundSql,String condition,String tableName,String authField) throws Exception {
+    private void generateSqlWithAuthCondition(BoundSql boundSql, String condition, String tableName, String authField) throws Exception {
         String originSql = boundSql.getSql();
 
         // 包装条件
@@ -124,25 +124,25 @@ public class QueryInterceptor implements Interceptor {
     }
 
     /**
-     * @param condition
-     * @param tableName
-     * @param authField
+     * @param condition 机构列表
+     * @param tableName 表名
+     * @param authField 字段名  默认org_ID
      * @return 拼接后的SQL语句
      */
     private String getFinalCondition(String condition, String tableName, String authField) {
         condition = Objects.isNull(condition) ? "" : condition.trim();
         if (StringUtils.hasLength(tableName)) {
-            condition = tableName+"."+authField+ " in ("+condition + ")";
-        }else {
-            condition = authField+ " in ("+condition + ")";
+            condition = tableName + "." + authField + " in (" + condition + ")";
+        } else {
+            condition = authField + " in (" + condition + ")";
         }
         return condition;
     }
 
     /**
      * 更新sql
-     * @param boundSql
-     * @param newSql
+     * @param boundSql 原始sql对象
+     * @param newSql   新sql
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
      */
