@@ -22,10 +22,7 @@ import org.springframework.util.StringUtils;
 import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 
 @Component
 @Intercepts(
@@ -72,7 +69,11 @@ public class QueryOrderInterceptor implements Interceptor {
                 InterceptAnnotation interceptorAnnotation = method.getAnnotation(InterceptAnnotation.class);
                 if (interceptorAnnotation.intercept()) {
                     // todo 数据列表参数需要校验
-                    generateSqlWithAuthCondition(boundSql, interceptorAnnotation.tableName(), interceptorAnnotation.filterField(),new ArrayList<>());
+                    LinkedList<String > list = new LinkedList<>();
+                    list.add("1");
+                    list.add("2");
+                    list.add("3");
+                    generateSqlWithAuthCondition(boundSql, interceptorAnnotation.tableName(), interceptorAnnotation.filterField(),list);
                 }
             }
         }
