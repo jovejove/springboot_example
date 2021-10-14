@@ -44,11 +44,10 @@ class MybatisApplicationTests {
         // pagehelper
 //        PageInfo<User> info = PageHelper.startPage(1, 2).doSelectPageInfo(() -> mapper.selectById(1));
 //        PageInfo<User> info = PageHelper.startPage(1, 10).doSelectPageInfo(() -> mapper.selectByUserId(1L));
-        PageInfo<User> info = PageHelper.startPage(1, 10).doSelectPageInfo(() -> mapper.selectByUserIds(Arrays.asList(1,2,3,4,5)));
-        List<User> list = info.getList();
-        System.out.println(Arrays.asList(list));
-        PageInfo<User> info2 = PageHelper.startPage(1, 10).doSelectPageInfo(() -> mapper.selectAll());
-//        assertThat(info.getTotal()).isEqualTo(1L);
+//        PageInfo<User> info = PageHelper.startPage(1, 10).doSelectPageInfo(() -> mapper.selectByUserIds(Arrays.asList(1,2,3,4,5)));
+//        List<User> list = info.getList();
+//        System.out.println(Arrays.asList(list));
+        PageInfo<User> info2 = PageHelper.startPage(1, 10,false).doSelectPageInfo(() -> mapper.selectAll());
         List<User> list2 = info2.getList();
         System.out.println(Arrays.asList(list2));
 //        assertThat(list).isNotEmpty();

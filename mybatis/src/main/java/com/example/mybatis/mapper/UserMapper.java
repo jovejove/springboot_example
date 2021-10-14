@@ -14,12 +14,12 @@ import java.util.List;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-    @InterceptAnnotation(authField = "id")
+    @InterceptAnnotation(filterField = "id")
     List<User> selectByUserId(Long id);
 
-    @InterceptAnnotation(authField = "id")
+    @InterceptAnnotation(tableName = "user",filterField = "id")
     List<User> selectByUserIds(List<Integer> ids);
 
-    @InterceptAnnotation(tableName = "user" , authField = "id")
+    @InterceptAnnotation(tableName = "user" , filterField = "id")
     List<User> selectAll();
 }

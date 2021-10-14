@@ -11,6 +11,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface InterceptAnnotation {
     boolean intercept() default  true;
-    String authField() default  "org_id";
+    String filterField() default  "org_id";
     String tableName() default "";
 }

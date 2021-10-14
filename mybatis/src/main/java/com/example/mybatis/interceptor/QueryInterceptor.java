@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
-@Component
+//@Component
 @Intercepts(
         {
                 @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}),
@@ -73,7 +73,7 @@ public class QueryInterceptor implements Interceptor {
             if (method.isAnnotationPresent(InterceptAnnotation.class) && (mName.equals(method.getName()) || mName.equals(method.getName() + count))) {
                 InterceptAnnotation interceptorAnnotation = method.getAnnotation(InterceptAnnotation.class);
                 if (interceptorAnnotation.intercept()) {
-                    generateSqlWithAuthCondition(boundSql, authSqlCondition, interceptorAnnotation.tableName(), interceptorAnnotation.authField());
+                    generateSqlWithAuthCondition(boundSql, authSqlCondition, interceptorAnnotation.tableName(), interceptorAnnotation.filterField());
                 }
             }
         }
@@ -105,8 +105,6 @@ public class QueryInterceptor implements Interceptor {
             whereSql.append(condition);
             // 获取当前查询条件
             Expression where = plain.getWhere();
-
-
 
             if (where == null) {
                 if (whereSql.length() > 0) {
