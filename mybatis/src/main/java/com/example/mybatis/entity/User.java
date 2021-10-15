@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-/**
- * @author miemie
- * @since 2020-05-29
- */
+
 //@TableName(value = "USER")
 @Data
 @Accessors(chain = true)

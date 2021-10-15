@@ -3,13 +3,13 @@ package com.example.mybatis.interceptor;
 import java.lang.annotation.*;
 
 /**
- * @author Administrator
+ * @author junjieLuo
  */
 
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface InterceptAnnotation {
+public @interface FillAuthCondition {
     boolean intercept() default  true;
     String filterField() default  "org_id";
     String tableName() default "";

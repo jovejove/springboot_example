@@ -10,7 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
  * MP 支持不需要 UserMapper.xml 测试注解条件
  * </p>
  *
- * @author hubin
+ * @author junjieLuo
  * @since 2021-08-19
  */
 @Mapper

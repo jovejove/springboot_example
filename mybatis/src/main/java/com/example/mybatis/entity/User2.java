@@ -6,14 +6,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.type.JdbcType;
 
-/**
- * <p>
- * 用户实体对应表 user2 测试注解条件
- * </p>
- *
- * @author hubin
- * @since 2021-08-19
- */
+
 @Data
 @Accessors(chain = true)
 public class User2 {

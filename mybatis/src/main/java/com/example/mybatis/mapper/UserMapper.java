@@ -2,7 +2,7 @@ package com.example.mybatis.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.mybatis.entity.User;
-import com.example.mybatis.interceptor.InterceptAnnotation;
+import com.example.mybatis.interceptor.FillAuthCondition;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,12 +14,12 @@ import java.util.List;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-    @InterceptAnnotation(filterField = "id")
+    @FillAuthCondition(filterField = "id")
     List<User> selectByUserId(Long id);
 
-    @InterceptAnnotation(tableName = "user",filterField = "id")
+    @FillAuthCondition(tableName = "user",filterField = "id")
     List<User> selectByUserIds(List<Integer> ids);
 
-    @InterceptAnnotation(tableName = "user" , filterField = "id")
+    @FillAuthCondition(tableName = "user" , filterField = "id")
     List<User> selectAll();
 }

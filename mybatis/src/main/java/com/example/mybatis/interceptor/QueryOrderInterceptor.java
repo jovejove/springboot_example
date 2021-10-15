@@ -1,12 +1,8 @@
 package com.example.mybatis.interceptor;
 
-import com.example.mybatis.utils.InsertInConditionUtil;
-import lombok.extern.slf4j.Slf4j;
+import com.example.mybatis.utils.SqlAddInConditionUtil;
 import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.parser.CCJSqlParserManager;
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectBody;
 import org.apache.ibatis.cache.CacheKey;
@@ -16,14 +12,18 @@ import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 
+/**
+ * @author junjieLuo
+ */
 @Component
 @Intercepts(
         {
@@ -31,8 +31,10 @@ import java.util.*;
                 @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class}),
         }
 )
-@Slf4j
 public class QueryOrderInterceptor implements Interceptor {
+
+    private final Logger logger = LoggerFactory.getLogger(QueryOrderInterceptor.class);
+
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         Object[] args = invocation.getArgs();
@@ -65,15 +67,15 @@ public class QueryOrderInterceptor implements Interceptor {
         String count = "_COUNT";
         for (Method method : classType.getDeclaredMethods()) {
             //注解逻辑判断  添加注解了才拦截
-            if (method.isAnnotationPresent(InterceptAnnotation.class) && (mName.equals(method.getName()) || mName.equals(method.getName() + count))) {
-                InterceptAnnotation interceptorAnnotation = method.getAnnotation(InterceptAnnotation.class);
+            if (method.isAnnotationPresent(FillAuthCondition.class) && (mName.equals(method.getName()) || mName.equals(method.getName() + count))) {
+                FillAuthCondition interceptorAnnotation = method.getAnnotation(FillAuthCondition.class);
                 if (interceptorAnnotation.intercept()) {
-                    // todo 数据列表参数需要校验
-                    LinkedList<String > list = new LinkedList<>();
+                    // todo 处理list数据权限列表
+                    LinkedList<String> list = new LinkedList<>();
                     list.add("1");
                     list.add("2");
                     list.add("3");
-                    generateSqlWithAuthCondition(boundSql, interceptorAnnotation.tableName(), interceptorAnnotation.filterField(),list);
+                    generateSqlWithAuthCondition(boundSql, interceptorAnnotation.tableName(), interceptorAnnotation.filterField(), list);
                 }
             }
         }
@@ -89,7 +91,7 @@ public class QueryOrderInterceptor implements Interceptor {
     }
 
 
-    private void generateSqlWithAuthCondition(BoundSql boundSql, String tableName, String filterField, List<String > filterDataList) throws Exception {
+    private void generateSqlWithAuthCondition(BoundSql boundSql, String tableName, String filterField, List<String> filterDataList) throws Exception {
         String originSql = boundSql.getSql();
 
         CCJSqlParserManager parserManager = new CCJSqlParserManager();
@@ -97,11 +99,13 @@ public class QueryOrderInterceptor implements Interceptor {
         try {
             select = (Select) parserManager.parse(new StringReader(originSql));
             SelectBody selectBody = select.getSelectBody();
-            InsertInConditionUtil.processSelectBody(selectBody, tableName,filterField,filterDataList);
 
-            log.info(selectBody.toString());
+            // sql语句加in条件
+            SqlAddInConditionUtil.processSelectBody(selectBody, tableName, filterField, filterDataList);
+
+            logger.info(selectBody.toString());
         } catch (JSQLParserException e) {
-            log.error("CCJSqlParserUtil in interceptor parse error , originSql :\r\n {}", originSql);
+            logger.error("CCJSqlParserUtil in interceptor parse error , originSql :\r\n {}", originSql);
             throw e;
         }
         resetBoundSql(boundSql, select.toString());
