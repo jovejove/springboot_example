@@ -14,12 +14,12 @@ import java.util.List;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-    @FillAuthCondition(filterField = "id")
+    @FillAuthCondition(column = "id")
     List<User> selectByUserId(Long id);
 
-    @FillAuthCondition(tableName = "user",filterField = "id")
+    @FillAuthCondition(table = "user",column = "id")
     List<User> selectByUserIds(List<Integer> ids);
 
-    @FillAuthCondition(tableName = "user" , filterField = "id")
+    @FillAuthCondition(table = "user" , column = "id")
     List<User> selectAll();
 }

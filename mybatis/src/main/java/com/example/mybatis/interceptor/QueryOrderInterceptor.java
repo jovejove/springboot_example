@@ -19,10 +19,13 @@ import org.springframework.stereotype.Component;
 import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * @author junjieLuo
+ * 使用出了问题先调试自己解决
  */
 @Component
 @Intercepts(
@@ -72,10 +75,9 @@ public class QueryOrderInterceptor implements Interceptor {
                 if (interceptorAnnotation.intercept()) {
                     // todo 处理list数据权限列表
                     LinkedList<String> list = new LinkedList<>();
-                    list.add("1");
-                    list.add("2");
-                    list.add("3");
-                    generateSqlWithAuthCondition(boundSql, interceptorAnnotation.tableName(), interceptorAnnotation.filterField(), list);
+                    list.add("221");
+                    list.add("234");
+                    generateSqlWithAuthCondition(boundSql, interceptorAnnotation.table(), interceptorAnnotation.column(), list);
                 }
             }
         }

@@ -20,6 +20,8 @@ import java.util.List;
 
 /**
  * @author junjieLuo
+ * 支持简单的in条件拼接
+ * 使用出了问题先调试自己解决
  */
 public class SqlAddInConditionUtil {
     private static final Logger log = LoggerFactory.getLogger(SqlAddInConditionUtil.class);
@@ -143,7 +145,6 @@ public class SqlAddInConditionUtil {
         }
 
         if (fromItemName.equals(tableName)) {
-            log.info("fromItemName -- " + fromItem);
             return true;
         }
         return false;
@@ -198,10 +199,11 @@ public class SqlAddInConditionUtil {
         List<Expression> expressionList = new ArrayList<Expression>();
         try {
             for (String item : filterDataList) {
-                expressionList.add(CCJSqlParserUtil.parseCondExpression(String.format("%s%s%s", "'", item, "'")));
+                expressionList.add(CCJSqlParserUtil.parseExpression(String.format("%s%s%s", "'", item, "'")));
+//                expressionList.add(CCJSqlParserUtil.parseExpression(item));
             }
         } catch (JSQLParserException e) {
-            log.error("InsertInConditionUtil.getInExpression CCJSqlParserUtil in interceptor parseCondExpression error , filterDataList :\r\n {}", JSONObject.toJSONString(filterDataList));
+            log.error("SqlAddInConditionUtil.getInExpression CCJSqlParserUtil in interceptor parseCondExpression error , filterDataList :\r\n {}", JSONObject.toJSONString(filterDataList));
             throw e;
         }
         inExpression.setRightItemsList(new ExpressionList(expressionList));
