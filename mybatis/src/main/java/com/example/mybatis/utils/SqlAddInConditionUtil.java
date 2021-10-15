@@ -20,8 +20,8 @@ import java.util.List;
 
 /**
  * @author junjieLuo
- * 支持简单的in条件拼接
- * 使用出了问题先调试自己解决
+ * <p>支持简单的in条件拼接</p>
+ * <p>注意：请使用者先自行评估是否符合业务需求。如果不符合，那么请勿使用，同时请勿修改代码。</p>
  */
 public class SqlAddInConditionUtil {
     private static final Logger log = LoggerFactory.getLogger(SqlAddInConditionUtil.class);

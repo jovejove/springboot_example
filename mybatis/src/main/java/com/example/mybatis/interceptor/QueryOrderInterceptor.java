@@ -25,7 +25,8 @@ import java.util.Properties;
 
 /**
  * @author junjieLuo
- * 使用出了问题先调试自己解决
+ * <p>只拦截query方法且mapper的方法上有注解FillAuthCondition。给Sql语句增加in条件</p>
+ * <p>注意：请使用者先自行评估是否符合业务需求。如果不符合，那么使用，同时请勿修改代码。</p>
  */
 @Component
 @Intercepts(

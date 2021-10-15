@@ -4,9 +4,11 @@ import java.lang.annotation.*;
 
 /**
  * @author junjieLuo
- * 配合类QueryOrderInterceptor使用
+ * <p>在mapper的方法上使用<p/>
+ * <p>类QueryOrderInterceptor拦截请求<p/>
+ * <p>注意：请使用者先自行评估是否符合业务需求。如果不符合，那么请勿使用，同时请勿修改代码。</p>
  */
-
+@Inherited
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
