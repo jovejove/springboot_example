@@ -1,10 +1,14 @@
 package com.panda.spring.validator;
 
 import com.panda.spring.entity.Person;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
+/**
+ * @author Administrator
+ */
 public class PersonValidator implements Validator {
     /**
      * This Validator validates only Person instances

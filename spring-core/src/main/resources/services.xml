@@ -6,6 +6,8 @@
 
     <bean id="person" class="com.panda.spring.entity.Person">
         <!-- collaborators and configuration for this bean go here -->
+        <constructor-arg name="name" value="panda"/>
+        <constructor-arg name="age" value="222"/>
     </bean>
 
     <!--    无参构造函数实例化-->
