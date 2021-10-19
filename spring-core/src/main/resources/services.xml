@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="person" class="com.panda.spring.entity.Person">
+        <!-- collaborators and configuration for this bean go here -->
+    </bean>
+
+    <!--    无参构造函数实例化-->
+    <bean id="personService" class="com.panda.spring.service.PersonService"/>
+
+    <!-- 使用实例工厂方法进行实例实例的实例化 the factory bean, which contains a method called createInstance() -->
+    <bean id="serviceLocator" class="com.panda.spring.service.DefaultServiceLocator">
+        <!-- inject any dependencies required by this locator bean -->
+    </bean>
+    <!-- the bean to be created via the factory bean -->
+    <bean id="clientService"
+          factory-bean="serviceLocator"
+          factory-method="createClientServiceInstance"/>
+
+
+    <bean id="clientService2"
+          class="com.panda.spring.service.ClientService"
+          factory-method="createInstance"/>
+
+    <!--    定义跨越多个 XML 文件-->
+    <!--    <import resource="services.xml"/>-->
+
+    <!--    Constructor argument type matching-->
+    <!--    <bean id="exampleBean" class="com.panda.spring.entity.ExampleBean">-->
+    <!--        <constructor-arg type="int" value="7500000"/>-->
+    <!--        <constructor-arg type="java.lang.String" value="42"/>-->
+    <!--    </bean>-->
+
+    <!--    Constructor argument index-->
+<!--    <bean id="exampleBean" class="com.panda.spring.entity.ExampleBean">-->
+<!--        <constructor-arg index="1" value="7500000"/>-->
+<!--        <constructor-arg index="0" value="42"/>-->
+<!--    </bean>-->
+
+<!--    use the constructor parameter name for value disambiguation 消歧义-->
+    <bean id="exampleBean" class="com.panda.spring.entity.ExampleBean" init-method="init">
+        <constructor-arg name="years" value="7500000"/>
+        <constructor-arg name="ultimateAnswer" value="42"/>
+    </bean>
+
+</beans>

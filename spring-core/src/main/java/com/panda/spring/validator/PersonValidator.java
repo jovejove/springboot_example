@@ -1,5 +1,6 @@
 package com.panda.spring.validator;
 
+import com.panda.spring.entity.Person;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
