@@ -11,44 +11,44 @@ import javax.annotation.PreDestroy;
 @Data
 public class ExampleBean implements InitializingBean, DisposableBean {
 
-    // Number of years to calculate the Ultimate Answer
     private final int years;
 
-    // The Answer to Life, the Universe, and Everything
     private final String ultimateAnswer;
 
     public ExampleBean(int years, String ultimateAnswer) {
         this.years = years;
         this.ultimateAnswer = ultimateAnswer;
+        System.out.println("ExampleBean construction");
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        System.out.println("InitializingBean.afterPropertiesSet()");
+        System.out.println("ExampleBean InitializingBean.afterPropertiesSet()");
     }
 
     @Override
     public void destroy() throws Exception {
-        System.out.println("DisposableBean.destroy()");
+        System.out.println("ExampleBean DisposableBean.destroy()");
     }
 
 
     public void init() {
         // do some destruction work (like releasing pooled connections)
-        System.out.println("init()");
+        System.out.println("ExampleBean init()");
     }
 
 
-    // postConstruct->afterPropertiesSet->init
+    // jsr-250 postConstruct->afterPropertiesSet->init
     @PostConstruct
     public void populateMovieCache() {
         // populates the movie cache upon initialization...
-        System.out.println("PostConstruct populateMovieCache");
+        System.out.println("ExampleBean PostConstruct populateMovieCache");
     }
 
+    // jsr-250  PreDestroy->destroy
     @PreDestroy
     public void clearMovieCache() {
-        System.out.println("PreDestroy clearMovieCache");
+        System.out.println("ExampleBean PreDestroy clearMovieCache");
         // clears the movie cache upon destruction...
     }
 }

@@ -14,18 +14,18 @@ import javax.annotation.Resource;
 @SpringBootTest
 class TestApplicationTest {
 
-    @Resource
-    private ExampleBean exampleBean;
-
-    @Resource
-    private ClientService clientService;
-
-    @Resource
-    private InstantiationTracingBeanPostProcessor instanceBeanPostProcessor;
-
-    @Resource
-    private MovieRecommender movieRecommender;
-
+//    @Resource
+//    private ExampleBean exampleBean;
+//
+//    @Resource
+//    private ClientService clientService;
+//
+//    @Resource
+//    private InstantiationTracingBeanPostProcessor instanceBeanPostProcessor;
+//
+//    @Resource
+//    private MovieRecommender movieRecommender;
+//
     @Resource
     private Person person;
 
