@@ -1,1 +1,1 @@
-By default, if Bean Validation is present on the classpath (for example, Hibernate Validator), the LocalValidatorFactoryBean is registered as a global Validator for use with @Valid and Validated on controller method arguments.
+This section describes the HTTP caching-related options that are available in Spring Web MVC.

@@ -4,11 +4,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         https://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="person" class="com.panda.spring.entity.Person">
-        <!-- collaborators and configuration for this bean go here -->
-        <constructor-arg name="name" value="panda"/>
-        <constructor-arg name="age" value="222"/>
-    </bean>
+<!--    <bean id="person" class="com.panda.spring.entity.Person">-->
+<!--        <constructor-arg name="name" value="panda"/>-->
+<!--        <constructor-arg name="age" value="222"/>-->
+<!--    </bean>-->
 
     <!--    无参构造函数实例化-->
     <bean id="personService" class="com.panda.spring.service.PersonService"/>

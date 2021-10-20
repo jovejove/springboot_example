@@ -17,12 +17,13 @@ import javax.validation.constraints.Size;
 @ToString
 public class Person {
 
-    @NotNull
-    @Size(max=6,message = "to long")
+    @NotNull(message = "name不能为空")
+    @Size(max = 6, message = "名字过长，最大长度为6个字符")
     private String name;
 
-    @Min(0)
-    @Max(value = 150,message = "too big")
+
+    @Min(value = 1, message = "age 太小，不能为负数")
+    @Max(value = 150, message = "age too big")
     private int age;
 
     // the usual getters and setters...
