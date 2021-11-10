@@ -1,1 +1,1 @@
-This section describes the HTTP caching-related options that are available in Spring Web MVC.
+Note that you need to declare MyPostProcessor as a bean, either explicitly in XML or by letting it be detected through a <component-scan/> declaration.
