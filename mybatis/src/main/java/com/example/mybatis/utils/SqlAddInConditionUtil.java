@@ -77,7 +77,7 @@ public class SqlAddInConditionUtil {
      */
     public static void processSelectBody(SelectBody selectBody, String tableName, String filterField, List<String> filterDataList) throws JSQLParserException {
 
-        if (!StringUtils.hasLength(tableName) || !StringUtils.hasLength(tableName) || CollectionUtils.isEmpty(filterDataList)) {
+        if (!StringUtils.hasLength(tableName) || !StringUtils.hasLength(filterField) || CollectionUtils.isEmpty(filterDataList)) {
             return;
         }
 
