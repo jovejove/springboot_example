@@ -18,7 +18,7 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import java.util.List;
 
 /**
- * @author Administrator
+ * @author panda
  * 全局异常处理
  * 参考 ResponseEntityExceptionHandler
  */
@@ -58,9 +58,6 @@ public class GlobalResponseEntityExceptionHandler {
         }
         //不采集校验异常
         LOGGER.error(message, ex);
-        //CAT采集异常日志到Logview
-//		Cat.getProducer().logError(ex);
-
         return exception(ex);
     }
 
