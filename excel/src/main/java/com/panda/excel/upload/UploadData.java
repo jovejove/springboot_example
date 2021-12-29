@@ -1,25 +1,25 @@
 package com.panda.excel.upload;
 
-import com.panda.excel.base.ValidExcelProperty;
-import lombok.Data;
+import com.panda.excel.base.CommonExcelProperty;
+import com.panda.excel.base.ImportExcelProperty;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * 基础数据类
- *
- **/
-@Data
-public class UploadData {
+ * @author Administrator
+ */
+public class UploadData extends CommonExcelProperty {
 
-    @ValidExcelProperty(unique = true,required = true)
+    @ImportExcelProperty(required = true, index = 0, name = "字符串标题")
     private String string;
 
-    @ValidExcelProperty(unique = true,required = false)
+    @ImportExcelProperty(required = true, index = 1, name = "日期标题")
     private Date date;
 
-    @ValidExcelProperty(unique = false,required = false)
-    private Double doubleData;
+    @ImportExcelProperty(required = true, index = 2, name = "数字标题")
+    private BigDecimal doubleData;
 
     public String getString() {
         return string;
@@ -37,11 +37,20 @@ public class UploadData {
         this.date = date;
     }
 
-    public Double getDoubleData() {
+    public BigDecimal getDoubleData() {
         return doubleData;
     }
 
-    public void setDoubleData(Double doubleData) {
+    public void setDoubleData(BigDecimal doubleData) {
         this.doubleData = doubleData;
+    }
+
+    @Override
+    public String toString() {
+        return "UploadData{" +
+                "string='" + string + '\'' +
+                ", date=" + date +
+                ", doubleData=" + doubleData +
+                '}';
     }
 }

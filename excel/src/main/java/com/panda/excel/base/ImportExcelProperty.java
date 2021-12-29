@@ -12,11 +12,16 @@ import java.lang.annotation.Target;
 @Inherited
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidExcelProperty {
+public @interface ImportExcelProperty {
 
     boolean required() default false;
 
     boolean unique() default false;
+
+    /**
+     * index不可重复
+     */
+    int index() default -1;
 
     String name() default "未定义名称";
 
