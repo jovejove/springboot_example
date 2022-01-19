@@ -62,7 +62,7 @@ class RedisConfigTest {
         uploadData.setDate(new Date());
         uploadData.setString("哈哈哈");
         uploadData.setDoubleData(BigDecimal.TEN);
-        uploadData.setErrorInfo(Collections.singletonList("错误"));
+        uploadData.setErrorInfoList(Collections.singletonList("错误"));
         HashMap<Integer, String > map = new HashMap<>();
         map.put(22, "嘿嘿");
         uploadData.setErrorInfoMap(map);

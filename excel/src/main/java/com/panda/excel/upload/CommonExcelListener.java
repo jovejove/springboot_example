@@ -1,6 +1,7 @@
 package com.panda.excel.upload;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.context.xlsx.DefaultXlsxReadContext;
 import com.alibaba.excel.event.AnalysisEventListener;
@@ -18,6 +19,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,6 +35,7 @@ import java.util.Objects;
 public class CommonExcelListener<T extends CommonExcelProperty> extends AnalysisEventListener<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonExcelListener.class);
+
     /**
      * excel格式正确数据
      */
@@ -41,6 +45,7 @@ public class CommonExcelListener<T extends CommonExcelProperty> extends Analysis
      * 采用默认map大小16，一般导入的时候很少大于12列
      */
     private final Map<Integer, String> columnMap = new HashMap<>();
+
     /**
      * 采用默认map大小16，一般导入的时候很少大于12列
      */
@@ -56,13 +61,16 @@ public class CommonExcelListener<T extends CommonExcelProperty> extends Analysis
     @Override
     public void invoke(T entity, AnalysisContext analysisContext) {
         if (excelList.size() > MAX_IMPORT_SIZE) {
-            throw new ExcelAnalysisException("单次导入数据不能超过2万条");
+            throw new ExcelAnalysisException(String.format("单次导入数据不能超过%d条",CommonExcelListener.MAX_IMPORT_SIZE));
         }
         LOGGER.info("解析到一条数据:{}", JSON.toJSONString(entity));
         DefaultXlsxReadContext context = (DefaultXlsxReadContext) analysisContext;
         // excel第一行
         Integer currentRowNum = context.getCurrentRowNum() + 1;
         Field[] fields = entity.getClass().getDeclaredFields();
+        // 默认所有字段为空值，若是，则跳过校验
+        boolean allBlankFlag = true;
+        // 字段值校验
         for (Field field : fields) {
             ImportExcelProperty annotation = field.getAnnotation(ImportExcelProperty.class);
             if (Objects.nonNull(annotation)) {
@@ -76,21 +84,46 @@ public class CommonExcelListener<T extends CommonExcelProperty> extends Analysis
                 throw new ExcelAnalysisException("解析模板出错，请传入正确格式的excel模板");
             }
             // 字段必填，空数据校验
-            if (annotation.required() && Objects.isNull(fieldValue)) {
-                List<String> errorInfoList = entity.getErrorInfo();
-                if (CollectionUtils.isEmpty(errorInfoList)) {
-                    errorInfoList = new LinkedList<>();
+            if (annotation.required()) {
+                if (Objects.nonNull(fieldValue)) {
+                    allBlankFlag = false;
                 }
-                entity.setRowIndex(currentRowNum);
-                errorInfoList.add(annotation.name() + NOT_EMPTY_STRING);
-                entity.setErrorInfo(errorInfoList);
+                if (Objects.isNull(fieldValue)) {
+                    List<String> errorInfoList = entity.getErrorInfoList();
+                    if (CollectionUtils.isEmpty(errorInfoList)) {
+                        errorInfoList = new LinkedList<>();
+                    }
+                    entity.setRowIndex(currentRowNum);
+                    errorInfoList.add(annotation.name() + NOT_EMPTY_STRING);
+                    if (!allBlankFlag) {
+                        entity.setErrorInfoList(errorInfoList);
+                    }
+                }
             }
+        }
+
+        if (!Objects.equals(this.headMap, this.columnMap)) {
+            throw new ExcelAnalysisException("文件模板错误");
         }
         excelList.add(entity);
     }
 
     @Override
     public void invokeHeadMap(Map headMap, AnalysisContext context) {
+
+        Type[] actualTypeArguments = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments();
+        LOGGER.info(JSON.toJSONString(actualTypeArguments));
+        Class<T> clazz = (Class<T>) actualTypeArguments[0];
+        Field[] declaredFields = clazz.getDeclaredFields();
+        for (Field field : declaredFields) {
+            field.setAccessible(true);
+            ExcelProperty annotation = field.getAnnotation(ExcelProperty.class);
+            if (Objects.nonNull(annotation)) {
+                this.headMap.put(annotation.index(), annotation.value());
+            }
+        }
+        LOGGER.info(JSON.toJSONString(declaredFields));
+        LOGGER.info(JSON.toJSONString(this.headMap));
         this.headMap = headMap;
         LOGGER.info("解析到一条头数据:{}", JSON.toJSONString(headMap));
     }
@@ -98,9 +131,7 @@ public class CommonExcelListener<T extends CommonExcelProperty> extends Analysis
 
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-        if (!Objects.equals(this.headMap, this.columnMap)) {
-            throw new ExcelAnalysisException("文件模板错误");
-        }
+
         if (CollectionUtils.isEmpty(excelList)) {
             throw new ExcelAnalysisException("文件内容为空");
         }

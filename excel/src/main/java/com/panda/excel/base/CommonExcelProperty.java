@@ -9,11 +9,25 @@ import java.util.Map;
  */
 public abstract class CommonExcelProperty implements Serializable {
 
+    /**
+     * 错误信息 key：行号  String：错误信息
+     */
     private Map<Integer, String> errorInfoMap;
 
-    private List<String> errorInfo;
+    /**
+     * 错误信息
+     */
+    private List<String> errorInfoList;
 
+    /**
+     * excel行 从1开始
+     */
     private Integer rowIndex;
+
+    /**
+     * 所有字段都为空
+     */
+    private Boolean isAllBlank;
 
     public Map<Integer, String> getErrorInfoMap() {
         return errorInfoMap;
@@ -31,11 +45,19 @@ public abstract class CommonExcelProperty implements Serializable {
         this.rowIndex = rowIndex;
     }
 
-    public List<String> getErrorInfo() {
-        return errorInfo;
+    public List<String> getErrorInfoList() {
+        return errorInfoList;
     }
 
-    public void setErrorInfo(List<String> errorInfo) {
-        this.errorInfo = errorInfo;
+    public void setErrorInfoList(List<String> errorInfoList) {
+        this.errorInfoList = errorInfoList;
+    }
+
+    public Boolean getAllBlank() {
+        return isAllBlank;
+    }
+
+    public void setAllBlank(Boolean allBlank) {
+        isAllBlank = allBlank;
     }
 }
