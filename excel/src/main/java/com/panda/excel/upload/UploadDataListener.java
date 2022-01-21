@@ -38,23 +38,11 @@ public class UploadDataListener extends CommonExcelListener<UploadData> {
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
-    public UploadDataListener() {
-
-    }
-
-//    @Override
-//    public void doValidLocalRepeatData() {
-//        LOGGER.info("super doLocalRepeatDataValid");
-//        super.doValidLocalRepeatData();
-//        LOGGER.info("doLocalRepeatDataValid");
-//    }
-
     @Override
     public void doValidBusinessData() {
         List<UploadData> excelList = this.getExcelList();
         LOGGER.info("doBusinessDataValid:{}", JSON.toJSONString(excelList, SerializerFeature.PrettyFormat));
     }
-
 
     @Override
     public void doSaveData() {
