@@ -1,30 +1,24 @@
 package com.panda.excel.upload;
 
-import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.context.xlsx.DefaultXlsxReadContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.exception.ExcelAnalysisException;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.panda.excel.base.BaseService;
-import com.panda.excel.base.BaseServiceImpl;
 import com.panda.excel.base.CommonExcelProperty;
 import com.panda.excel.base.ImportExcelProperty;
 import com.panda.excel.base.Pattern;
+import com.panda.excel.base.RedisKeyEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,9 +34,13 @@ public abstract class CommonExcelListener<T extends CommonExcelProperty> extends
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonExcelListener.class);
     /**
-     * excel格式正确数据
+     * excel数据
      */
     protected final List<T> excelList = new ArrayList<>();
+    /**
+     * excel错误数据
+     */
+    protected final List<T> excelErrorList = new ArrayList<>();
     /**
      * 采用默认map大小16，一般导入的时候很少大于12列
      */
@@ -51,6 +49,14 @@ public abstract class CommonExcelListener<T extends CommonExcelProperty> extends
      * 最大导入数据量 因需要excel重复校验，故不能切片导入
      */
     private static final int MAX_IMPORT_SIZE = 20000;
+
+    int allCount = 0;
+    int failedCount = 0;
+    int successCount = 0;
+
+    public List<T> getExcelErrorList() {
+        return excelErrorList;
+    }
 
     @Override
     public void invoke(T entity, AnalysisContext analysisContext) {
@@ -133,7 +139,7 @@ public abstract class CommonExcelListener<T extends CommonExcelProperty> extends
         // 校验业务数据
         doValidBusinessData();
         // 导出错误数据
-        doExportErrorExcelData();
+        doAnalyzeErrorExcelData();
         // 保存业务数据
         doSaveData();
         LOGGER.info("所有数据解析完成！" + this.excelList.size());
@@ -210,7 +216,20 @@ public abstract class CommonExcelListener<T extends CommonExcelProperty> extends
     /**
      * 导出错误数据
      */
-    abstract void doExportErrorExcelData();
+    void doAnalyzeErrorExcelData(){
+        for (T t : excelList) {
+            if (t.isAllBlank()) {
+                continue;
+            }
+            allCount++;
+            if (!org.springframework.util.CollectionUtils.isEmpty(t.getErrorInfoList())) {
+                failedCount++;
+                excelErrorList.add(t);
+            }else {
+                successCount++;
+            }
+        }
+    }
 
     /**
      * 存储数据库
@@ -231,4 +250,10 @@ public abstract class CommonExcelListener<T extends CommonExcelProperty> extends
 //        System.out.println(Arrays.toString(excelList.toArray()));
 //        LOGGER.info("excelList:{}", JSON.toJSONString(excelList, SerializerFeature.WriteNullStringAsEmpty));
 //    }
+
+    public static void main(String[] args) throws FileNotFoundException {
+        int i = 0;
+        i++;
+        System.out.println(i);
+    }
 }

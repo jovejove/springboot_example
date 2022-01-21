@@ -5,8 +5,10 @@ import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.panda.excel.base.BaseService;
+import com.panda.excel.base.RedisKeyEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -14,7 +16,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
@@ -34,40 +35,38 @@ public class UploadDataListener extends CommonExcelListener<UploadData> {
     @Resource
     private BaseService<UploadData> baseService;
 
-    @Override
-    public void doValidLocalRepeatData() {
-        LOGGER.info("super doLocalRepeatDataValid");
-        super.doValidLocalRepeatData();
-        LOGGER.info("doLocalRepeatDataValid");
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
+
+    public UploadDataListener() {
+
     }
+
+//    @Override
+//    public void doValidLocalRepeatData() {
+//        LOGGER.info("super doLocalRepeatDataValid");
+//        super.doValidLocalRepeatData();
+//        LOGGER.info("doLocalRepeatDataValid");
+//    }
 
     @Override
     public void doValidBusinessData() {
         List<UploadData> excelList = this.getExcelList();
-        LOGGER.info("doBusinessDataValid:{}",JSON.toJSONString(excelList, SerializerFeature.PrettyFormat));
-    }
-
-    @Override
-    void doExportErrorExcelData() {
-        List<UploadData> excelList = this.getExcelList();
-        for (UploadData uploadData : excelList) {
-            if (uploadData.isAllBlank()) {
-                continue;
-
-            }
-        }
+        LOGGER.info("doBusinessDataValid:{}", JSON.toJSONString(excelList, SerializerFeature.PrettyFormat));
     }
 
 
     @Override
     public void doSaveData() {
+        List<UploadData> excelErrorList = this.getExcelErrorList();
+        redisTemplate.opsForValue().set(RedisKeyEnum.EXCEL_ERROR_LIST_DEFAULT.getId(), excelErrorList);
         List<UploadData> excelList = this.getExcelList();
         LOGGER.info("{}条数据，开始存储数据库！", excelList.size());
-//        baseService.saveOrUpdateBatch(excelList, excelList.size());
+        baseService.saveOrUpdateBatch(excelList, excelList.size());
         LOGGER.info("存储数据库成功！");
     }
 
-    public static void exportData() throws FileNotFoundException, UnsupportedEncodingException {
+    public static void exportData() throws FileNotFoundException {
         List<UploadData> dataList = new LinkedList<>();
         UploadData uploadData;
         for (int i = 0; i < 3; i++) {
@@ -93,9 +92,7 @@ public class UploadDataListener extends CommonExcelListener<UploadData> {
     }
 
 
-
-
-    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
+    public static void main(String[] args) throws FileNotFoundException {
         String path = Objects.requireNonNull(CommonExcelListener.class.getResource("/")).getPath();
 
         String filePath = path + "demo" + File.separator + "demo.xlsx";

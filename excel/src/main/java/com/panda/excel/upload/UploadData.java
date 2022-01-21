@@ -1,6 +1,5 @@
 package com.panda.excel.upload;
 
-import com.alibaba.excel.annotation.ExcelProperty;
 import com.panda.excel.base.CommonExcelProperty;
 import com.panda.excel.base.ImportExcelProperty;
 import com.panda.excel.base.Pattern;
