@@ -1,82 +1,111 @@
 package com.panda.excel.upload;
 
-import com.alibaba.excel.context.AnalysisContext;
-import com.alibaba.excel.event.AnalysisEventListener;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.panda.excel.base.BaseService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 模板的读取类
  *
+ * @author Administrator
  */
-// 有个很重要的点 DemoDataListener 不能被spring管理，要每次读取excel都要new,然后里面用到spring可以构造方法传进去
-public class UploadDataListener extends AnalysisEventListener<UploadData> {
+@Service
+public class UploadDataListener extends CommonExcelListener<UploadData> {
     private static final Logger LOGGER = LoggerFactory.getLogger(UploadDataListener.class);
-    /**
-     * 每隔5条存储数据库，实际使用中可以3000条，然后清理list ，方便内存回收
-     */
-    private static final int BATCH_COUNT = 5;
-    List<UploadData> list = new ArrayList<UploadData>();
-    /**
-     * 假设这个是一个DAO，当然有业务逻辑这个也可以是一个service。当然如果不用存储这个对象没用。
-     */
-    private UploadDAO uploadDAO;
 
-    public UploadDataListener() {
-        // 这里是demo，所以随便new一个。实际使用如果到了spring,请使用下面的有参构造函数
-        uploadDAO = new UploadDAO();
-    }
+    @Resource
+    private BaseService<UploadData> baseService;
 
-    /**
-     * 如果使用了spring,请使用这个构造方法。每次创建Listener的时候需要把spring管理的类传进来
-     *
-     * @param uploadDAO
-     */
-    public UploadDataListener(UploadDAO uploadDAO) {
-        this.uploadDAO = uploadDAO;
-    }
-
-    /**
-     * 这个每一条数据解析都会来调用
-     *
-     * @param data
-     *            one row value. Is is same as {@link AnalysisContext#readRowHolder()}
-     * @param context
-     */
     @Override
-    public void invoke(UploadData data, AnalysisContext context) {
-        LOGGER.info("解析到一条数据:{}", JSON.toJSONString(data));
-        list.add(data);
-        // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
-        if (list.size() >= BATCH_COUNT) {
-            saveData();
-            // 存储完成清理 list
-            list.clear();
+    public void doValidLocalRepeatData() {
+        LOGGER.info("super doLocalRepeatDataValid");
+        super.doValidLocalRepeatData();
+        LOGGER.info("doLocalRepeatDataValid");
+    }
+
+    @Override
+    public void doValidBusinessData() {
+        List<UploadData> excelList = this.getExcelList();
+        LOGGER.info("doBusinessDataValid:{}",JSON.toJSONString(excelList, SerializerFeature.PrettyFormat));
+    }
+
+    @Override
+    void doExportErrorExcelData() {
+        List<UploadData> excelList = this.getExcelList();
+        for (UploadData uploadData : excelList) {
+            if (uploadData.isAllBlank()) {
+                continue;
+
+            }
         }
     }
 
-    /**
-     * 所有数据解析完成了 都会来调用
-     *
-     * @param context
-     */
+
     @Override
-    public void doAfterAllAnalysed(AnalysisContext context) {
-        // 这里也要保存数据，确保最后遗留的数据也存储到数据库
-        saveData();
-        LOGGER.info("所有数据解析完成！");
+    public void doSaveData() {
+        List<UploadData> excelList = this.getExcelList();
+        LOGGER.info("{}条数据，开始存储数据库！", excelList.size());
+//        baseService.saveOrUpdateBatch(excelList, excelList.size());
+        LOGGER.info("存储数据库成功！");
     }
 
-    /**
-     * 加上存储数据库
-     */
-    private void saveData() {
-        LOGGER.info("{}条数据，开始存储数据库！", list.size());
-        uploadDAO.save(list);
-        LOGGER.info("存储数据库成功！");
+    public static void exportData() throws FileNotFoundException, UnsupportedEncodingException {
+        List<UploadData> dataList = new LinkedList<>();
+        UploadData uploadData;
+        for (int i = 0; i < 3; i++) {
+            uploadData = new UploadData();
+            uploadData.setString("string" + i);
+            uploadData.setDate(new Date());
+            uploadData.setDoubleData(new BigDecimal(i));
+            dataList.add(uploadData);
+        }
+        ExcelWriterBuilder builder = EasyExcel.write();
+        List<List<String>> head = new LinkedList<>();
+        head.add(Collections.singletonList("string"));
+        head.add(Collections.singletonList("date"));
+        head.add(Collections.singletonList("bigDecimal"));
+        String path = "C:\\Users\\Administrator\\Downloads";
+//        String fileName = URLEncoder.encode("文件名.xlsx", StandardCharsets.UTF_8.toString());
+        String fileName = "文件名.xlsx";
+        String filePath = path + File.separator + fileName;
+
+        File file = new File(filePath);
+        builder.head(head).autoCloseStream(true).file(new FileOutputStream(file)).sheet().doWrite(dataList);
+//        builder.he
+    }
+
+
+
+
+    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
+        String path = Objects.requireNonNull(CommonExcelListener.class.getResource("/")).getPath();
+
+        String filePath = path + "demo" + File.separator + "demo.xlsx";
+        UploadDataListener listener = new UploadDataListener();
+        EasyExcel.read(new FileInputStream(filePath), UploadData.class, listener).sheet().doRead();
+
+//        List<UploadData> excelList = listener.getExcelList();
+//        System.out.println(Arrays.toString(excelList.toArray()));
+//        LOGGER.info("excelList:{}", JSON.toJSONString(excelList, SerializerFeature.WriteNullStringAsEmpty));
+
+        exportData();
     }
 }

@@ -1,7 +1,9 @@
 package com.panda.excel.upload;
 
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.panda.excel.base.CommonExcelProperty;
 import com.panda.excel.base.ImportExcelProperty;
+import com.panda.excel.base.Pattern;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -12,14 +14,19 @@ import java.util.Date;
  */
 public class UploadData extends CommonExcelProperty {
 
-    @ImportExcelProperty(required = true, index = 0, name = "字符串标题")
+
+    @ImportExcelProperty(unique = true,required = true, index = 0, name = "字符串标题")
     private String string;
 
-    @ImportExcelProperty(required = true, index = 1, name = "日期标题")
+    @ImportExcelProperty(unique = true,required = true, index = 1, name = "日期标题")
     private Date date;
 
+    @Pattern(regexp = "^\\d+\\.\\d?$")
     @ImportExcelProperty(required = true, index = 2, name = "数字标题")
     private BigDecimal doubleData;
+
+    @ImportExcelProperty(index = 3, name = "姓名")
+    private String test;
 
     public String getString() {
         return string;
@@ -45,12 +52,11 @@ public class UploadData extends CommonExcelProperty {
         this.doubleData = doubleData;
     }
 
-    @Override
-    public String toString() {
-        return "UploadData{" +
-                "string='" + string + '\'' +
-                ", date=" + date +
-                ", doubleData=" + doubleData +
-                '}';
+    public String getTest() {
+        return test;
+    }
+
+    public void setTest(String test) {
+        this.test = test;
     }
 }

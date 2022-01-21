@@ -1,7 +1,6 @@
 package com.panda.excel.upload;
 
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.context.xlsx.DefaultXlsxReadContext;
 import com.alibaba.excel.event.AnalysisEventListener;
@@ -9,8 +8,11 @@ import com.alibaba.excel.exception.ExcelAnalysisException;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.panda.excel.base.BaseService;
+import com.panda.excel.base.BaseServiceImpl;
 import com.panda.excel.base.CommonExcelProperty;
 import com.panda.excel.base.ImportExcelProperty;
+import com.panda.excel.base.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,138 +30,205 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
 
 /**
  * @author Administrator
  */
-public class CommonExcelListener<T extends CommonExcelProperty> extends AnalysisEventListener<T> {
+
+public abstract class CommonExcelListener<T extends CommonExcelProperty> extends AnalysisEventListener<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonExcelListener.class);
-
     /**
      * excel格式正确数据
      */
-    private final List<T> excelList = new ArrayList<>();
-
+    protected final List<T> excelList = new ArrayList<>();
     /**
      * 采用默认map大小16，一般导入的时候很少大于12列
      */
     private final Map<Integer, String> columnMap = new HashMap<>();
-
     /**
-     * 采用默认map大小16，一般导入的时候很少大于12列
-     */
-    private Map<Object, Object> headMap = new HashMap<>();
-
-    /**
-     * 最大导入数据量
+     * 最大导入数据量 因需要excel重复校验，故不能切片导入
      */
     private static final int MAX_IMPORT_SIZE = 20000;
-
-    private static final String NOT_EMPTY_STRING = "不能为空";
 
     @Override
     public void invoke(T entity, AnalysisContext analysisContext) {
         if (excelList.size() > MAX_IMPORT_SIZE) {
-            throw new ExcelAnalysisException(String.format("单次导入数据不能超过%d条",CommonExcelListener.MAX_IMPORT_SIZE));
+            throw new ExcelAnalysisException(String.format("单次导入数据不能超过%d条", CommonExcelListener.MAX_IMPORT_SIZE));
         }
-        LOGGER.info("解析到一条数据:{}", JSON.toJSONString(entity));
-        DefaultXlsxReadContext context = (DefaultXlsxReadContext) analysisContext;
+//        LOGGER.info("解析到一条数据:{}", JSON.toJSONString(entity));
+        doLocalDataRequiredValid(entity, (DefaultXlsxReadContext) analysisContext);
+        excelList.add(entity);
+    }
+
+    public void doLocalDataRequiredValid(T entity, DefaultXlsxReadContext analysisContext) {
         // excel第一行
-        Integer currentRowNum = context.getCurrentRowNum() + 1;
+        Integer currentRowNum = analysisContext.getCurrentRowNum() + 1;
         Field[] fields = entity.getClass().getDeclaredFields();
-        // 默认所有字段为空值，若是，则跳过校验
-        boolean allBlankFlag = true;
         // 字段值校验
-        for (Field field : fields) {
-            ImportExcelProperty annotation = field.getAnnotation(ImportExcelProperty.class);
-            if (Objects.nonNull(annotation)) {
-                columnMap.put(annotation.index(), annotation.name());
-            }
-            field.setAccessible(true);
-            Object fieldValue;
-            try {
-                fieldValue = field.get(entity);
-            } catch (IllegalAccessException e) {
-                throw new ExcelAnalysisException("解析模板出错，请传入正确格式的excel模板");
-            }
-            // 字段必填，空数据校验
-            if (annotation.required()) {
-                if (Objects.nonNull(fieldValue)) {
-                    allBlankFlag = false;
-                }
-                if (Objects.isNull(fieldValue)) {
-                    List<String> errorInfoList = entity.getErrorInfoList();
-                    if (CollectionUtils.isEmpty(errorInfoList)) {
-                        errorInfoList = new LinkedList<>();
+        try {
+            for (Field field : fields) {
+                ImportExcelProperty annotation = field.getAnnotation(ImportExcelProperty.class);
+                Pattern patternAnnotation = field.getAnnotation(Pattern.class);
+                field.setAccessible(true);
+                Object fieldValue = field.get(entity);
+                // 字段必填，空数据校验
+                List<String> errorInfoList = entity.getErrorInfoList();
+                if (Objects.nonNull(annotation) && annotation.required()) {
+                    if (Objects.isNull(fieldValue)) {
+                        if (CollectionUtils.isEmpty(errorInfoList)) {
+                            errorInfoList = new LinkedList<>();
+                        }
+                        entity.setRowIndex(currentRowNum);
+                        errorInfoList.add(annotation.name() + annotation.message());
+                        entity.setErrorInfoList(errorInfoList);
                     }
-                    entity.setRowIndex(currentRowNum);
-                    errorInfoList.add(annotation.name() + NOT_EMPTY_STRING);
-                    if (!allBlankFlag) {
+                }
+                // 字段格式校验
+                if (Objects.nonNull(fieldValue) & Objects.nonNull(patternAnnotation) && Objects.nonNull(patternAnnotation.regexp())) {
+                    java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(patternAnnotation.regexp());
+                    Matcher matcher = pattern.matcher(fieldValue.toString());
+                    if (!matcher.matches()) {
+                        if (CollectionUtils.isEmpty(errorInfoList)) {
+                            errorInfoList = new LinkedList<>();
+                        }
+                        entity.setRowIndex(currentRowNum);
+                        errorInfoList.add(annotation.name() + patternAnnotation.message());
                         entity.setErrorInfoList(errorInfoList);
                     }
                 }
             }
+        } catch (IllegalAccessException e) {
+            throw new ExcelAnalysisException("解析模板出错，请传入正确格式的excel模板");
         }
-
-        if (!Objects.equals(this.headMap, this.columnMap)) {
-            throw new ExcelAnalysisException("文件模板错误");
-        }
-        excelList.add(entity);
     }
 
     @Override
     public void invokeHeadMap(Map headMap, AnalysisContext context) {
-
         Type[] actualTypeArguments = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments();
         LOGGER.info(JSON.toJSONString(actualTypeArguments));
         Class<T> clazz = (Class<T>) actualTypeArguments[0];
         Field[] declaredFields = clazz.getDeclaredFields();
         for (Field field : declaredFields) {
             field.setAccessible(true);
-            ExcelProperty annotation = field.getAnnotation(ExcelProperty.class);
+            ImportExcelProperty annotation = field.getAnnotation(ImportExcelProperty.class);
             if (Objects.nonNull(annotation)) {
-                this.headMap.put(annotation.index(), annotation.value());
+                this.columnMap.put(annotation.index(), annotation.name());
             }
         }
-        LOGGER.info(JSON.toJSONString(declaredFields));
-        LOGGER.info(JSON.toJSONString(this.headMap));
-        this.headMap = headMap;
-        LOGGER.info("解析到一条头数据:{}", JSON.toJSONString(headMap));
+        if (!Objects.deepEquals(this.columnMap, headMap)) {
+            throw new ExcelAnalysisException("文件模板错误");
+        }
     }
 
 
     @Override
     public void doAfterAllAnalysed(AnalysisContext analysisContext) {
-
         if (CollectionUtils.isEmpty(excelList)) {
             throw new ExcelAnalysisException("文件内容为空");
         }
-//        saveData();
-        LOGGER.info("所有数据解析完成！");
+        // 校验重复数据
+        doValidLocalRepeatData();
+        // 校验业务数据
+        doValidBusinessData();
+        // 导出错误数据
+        doExportErrorExcelData();
+        // 保存业务数据
+        doSaveData();
+        LOGGER.info("所有数据解析完成！" + this.excelList.size());
     }
-
 
     /**
-     * 加上存储数据库
+     * 校验重复数据
      */
-    private void saveData() {
-        LOGGER.info("{}条数据，开始存储数据库！", excelList.size());
-        LOGGER.info("存储数据库成功！");
+    public void doValidLocalRepeatData() {
+        List<T> excelList = this.excelList;
+        Map<String, Integer> repeatMap = new HashMap<>(512);
+        try {
+            for (T t : excelList) {
+                doValidLocalDataAllBlank(t);
+                String uniqueKey = getUniqueKey(t);
+                repeatMap.put(uniqueKey, repeatMap.getOrDefault(uniqueKey, 0) + 1);
+            }
+            for (T t : excelList) {
+                String uniqueKey = getUniqueKey(t);
+                Integer integer = repeatMap.get(uniqueKey);
+                if (integer.compareTo(1) > 0) {
+                    t.setRepeat(true);
+                }
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
+
+    /**
+     * @param t row data
+     * @return unique key
+     */
+    public String getUniqueKey(T t) throws IllegalAccessException {
+        String uniqueStr = null;
+        Field[] fields = t.getClass().getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            Object fieldValue = field.get(t);
+            ImportExcelProperty importExcelProperty = field.getAnnotation(ImportExcelProperty.class);
+            if (Objects.nonNull(importExcelProperty)) {
+                if (Objects.nonNull(fieldValue) && importExcelProperty.unique()) {
+                    uniqueStr += fieldValue;
+                }
+            }
+        }
+        return uniqueStr;
+    }
+
+    /**
+     * 字段必填无数据，则整条数据为空数据
+     * @param t row data
+     */
+    public void doValidLocalDataAllBlank(T t) throws IllegalAccessException {
+        Field[] fields = t.getClass().getDeclaredFields();
+        t.setAllBlank(true);
+        for (Field field : fields) {
+            field.setAccessible(true);
+            Object fieldValue = field.get(t);
+            ImportExcelProperty importExcelProperty = field.getAnnotation(ImportExcelProperty.class);
+            if (Objects.nonNull(importExcelProperty)) {
+                if (Objects.nonNull(fieldValue) && importExcelProperty.required()) {
+                    t.setAllBlank(false);
+                }
+            }
+        }
+    }
+
+    /**
+     * 校验业务数据
+     */
+    abstract void doValidBusinessData();
+
+    /**
+     * 导出错误数据
+     */
+    abstract void doExportErrorExcelData();
+
+    /**
+     * 存储数据库
+     */
+    abstract void doSaveData();
 
     public List<T> getExcelList() {
         return excelList;
     }
 
 
-    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-        String path = Objects.requireNonNull(CommonExcelListener.class.getResource("/")).getPath();
-        String filePath = path + "demo" + File.separator + "demo.xlsx";
-        CommonExcelListener<UploadData> listener = new CommonExcelListener<>();
-        EasyExcel.read(new FileInputStream(filePath), UploadData.class, listener).sheet().doRead();
-        List<UploadData> excelList = listener.getExcelList();
-        System.out.println(Arrays.toString(excelList.toArray()));
-        LOGGER.info("excelList:{}", JSON.toJSONString(excelList, SerializerFeature.WriteNullStringAsEmpty));
-    }
+//    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
+//        String path = Objects.requireNonNull(CommonExcelListener.class.getResource("/")).getPath();
+//        String filePath = path + "demo" + File.separator + "demo.xlsx";
+//        CommonExcelListener<UploadData> listener = new MyExcelListner();
+//        EasyExcel.read(new FileInputStream(filePath), UploadData.class, listener).sheet().doRead();
+//        List<UploadData> excelList = listener.getExcelList();
+//        System.out.println(Arrays.toString(excelList.toArray()));
+//        LOGGER.info("excelList:{}", JSON.toJSONString(excelList, SerializerFeature.WriteNullStringAsEmpty));
+//    }
 }

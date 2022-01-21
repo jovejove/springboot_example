@@ -2,7 +2,6 @@ package com.panda.excel.upload;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.fastjson.JSON;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -96,7 +95,7 @@ public class WebTest {
     @ResponseBody
     public String upload(MultipartFile file) throws IOException {
 //        EasyExcel.read(file.getInputStream(), UploadData.class, new UploadDataListener(uploadDAO)).sheet().doRead();
-        EasyExcel.read(file.getInputStream(), UploadData.class, new CommonExcelListener<UploadData>()).sheet().doRead();
+//        EasyExcel.read(file.getInputStream(), UploadData.class, new MyExcelListner()).sheet().doRead();
         return "success";
     }
 

@@ -14,8 +14,14 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ImportExcelProperty {
 
+    /**
+     * 列是否必填
+     */
     boolean required() default false;
 
+    /**
+     * 唯一标识
+     */
     boolean unique() default false;
 
     /**
@@ -23,6 +29,14 @@ public @interface ImportExcelProperty {
      */
     int index() default -1;
 
+    /**
+     * 列名称
+     */
     String name() default "未定义名称";
+
+    /**
+     * 列值校验提示
+     */
+    String message() default "不能为空";
 
 }
