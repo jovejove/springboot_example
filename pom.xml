@@ -9,6 +9,7 @@
         <module>springboot-activemq</module>
         <module>dsa</module>
         <module>mybatis</module>
+        <module>spock</module>
     </modules>
 
     <parent>
