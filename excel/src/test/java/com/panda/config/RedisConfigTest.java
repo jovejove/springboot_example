@@ -61,11 +61,11 @@ class RedisConfigTest {
         UploadData uploadData = new UploadData();
         uploadData.setDate(new Date());
         uploadData.setString("哈哈哈");
-        uploadData.setDoubleData(BigDecimal.TEN);
+        uploadData.setBigDecimal(BigDecimal.TEN);
         uploadData.setErrorInfoList(Collections.singletonList("错误"));
         HashMap<Integer, String > map = new HashMap<>();
         map.put(22, "嘿嘿");
-        uploadData.setErrorInfoMap(map);
+//        uploadData.setErrorInfoMap(map);
         forValue.set("test:hello:1", uploadData);
         System.out.println(JSON.toJSONString(uploadData));
         Object o = forValue.get("test:hello:1");

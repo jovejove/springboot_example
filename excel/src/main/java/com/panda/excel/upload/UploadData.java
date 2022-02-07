@@ -22,7 +22,7 @@ public class UploadData extends CommonExcelProperty {
 
     @Pattern(regexp = "^\\d+\\.\\d?$")
     @ImportExcelProperty(required = true, index = 2, name = "数字标题")
-    private BigDecimal doubleData;
+    private BigDecimal bigDecimal;
 
     @ImportExcelProperty(index = 3, name = "姓名")
     private String test;
@@ -43,12 +43,12 @@ public class UploadData extends CommonExcelProperty {
         this.date = date;
     }
 
-    public BigDecimal getDoubleData() {
-        return doubleData;
+    public BigDecimal getBigDecimal() {
+        return bigDecimal;
     }
 
-    public void setDoubleData(BigDecimal doubleData) {
-        this.doubleData = doubleData;
+    public void setBigDecimal(BigDecimal bigDecimal) {
+        this.bigDecimal = bigDecimal;
     }
 
     public String getTest() {

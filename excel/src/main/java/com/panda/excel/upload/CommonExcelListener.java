@@ -50,9 +50,9 @@ public abstract class CommonExcelListener<T extends CommonExcelProperty> extends
      */
     private static final int MAX_IMPORT_SIZE = 20000;
 
-    int allCount = 0;
-    int failedCount = 0;
-    int successCount = 0;
+    protected int allCount = 0;
+    protected int failedCount = 0;
+    protected int successCount = 0;
 
     public List<T> getExcelErrorList() {
         return excelErrorList;
@@ -63,7 +63,6 @@ public abstract class CommonExcelListener<T extends CommonExcelProperty> extends
         if (excelList.size() > MAX_IMPORT_SIZE) {
             throw new ExcelAnalysisException(String.format("单次导入数据不能超过%d条", CommonExcelListener.MAX_IMPORT_SIZE));
         }
-//        LOGGER.info("解析到一条数据:{}", JSON.toJSONString(entity));
         doLocalDataRequiredValid(entity, (DefaultXlsxReadContext) analysisContext);
         excelList.add(entity);
     }
@@ -138,7 +137,7 @@ public abstract class CommonExcelListener<T extends CommonExcelProperty> extends
         doValidLocalRepeatData();
         // 校验业务数据
         doValidBusinessData();
-        // 导出错误数据
+        // 分析错误数据
         doAnalyzeErrorExcelData();
         // 保存业务数据
         doSaveData();
@@ -214,7 +213,7 @@ public abstract class CommonExcelListener<T extends CommonExcelProperty> extends
     abstract void doValidBusinessData();
 
     /**
-     * 导出错误数据
+     * 分析错误数据
      */
     void doAnalyzeErrorExcelData(){
         for (T t : excelList) {
@@ -238,22 +237,5 @@ public abstract class CommonExcelListener<T extends CommonExcelProperty> extends
 
     public List<T> getExcelList() {
         return excelList;
-    }
-
-
-//    public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
-//        String path = Objects.requireNonNull(CommonExcelListener.class.getResource("/")).getPath();
-//        String filePath = path + "demo" + File.separator + "demo.xlsx";
-//        CommonExcelListener<UploadData> listener = new MyExcelListner();
-//        EasyExcel.read(new FileInputStream(filePath), UploadData.class, listener).sheet().doRead();
-//        List<UploadData> excelList = listener.getExcelList();
-//        System.out.println(Arrays.toString(excelList.toArray()));
-//        LOGGER.info("excelList:{}", JSON.toJSONString(excelList, SerializerFeature.WriteNullStringAsEmpty));
-//    }
-
-    public static void main(String[] args) throws FileNotFoundException {
-        int i = 0;
-        i++;
-        System.out.println(i);
     }
 }
