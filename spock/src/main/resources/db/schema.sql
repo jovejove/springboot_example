@@ -1,0 +1,4 @@
+CREATE TABLE DEMO_DICTIONARY(
+                     DEMO_ID NUMBER PRIMARY KEY NOT NULL,
+                     DEMO_STR VARCHAR2(100)
+);

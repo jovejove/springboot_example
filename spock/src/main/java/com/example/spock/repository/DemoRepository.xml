@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.spock.repository.DemoRepository">
+    <select id="getDemo" resultType="com.example.spock.entity.DemoEntity">
+        SELECT
+            DEMO_ID  demoId,
+            DEMO_STR  demoStr
+        FROM
+            DEMO_DICTIONARY
+        WHERE
+            DEMO_ID = #{demoId,jdbcType=NUMERIC}
+    </select>
+
+    <insert id="createDemo">
+        INSERT INTO
+            DEMO_DICTIONARY(
+            DEMO_ID,
+            DEMO_STR
+        )
+        VALUES(
+                  #{param.demoId,jdbcType=NUMERIC},
+                  #{param.demoStr,jdbcType=VARCHAR}
+              )
+    </insert>
+</mapper>
