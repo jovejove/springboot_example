@@ -21,8 +21,8 @@
     </select>
 
     <select id="selectAll" resultType="com.example.mybatis.entity.User">
-        select *
-        from user
+        select ifnull(u.card_no,'padna'),u.*
+        from user u
         order by id desc
     </select>
 </mapper>

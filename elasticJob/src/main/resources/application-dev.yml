@@ -1,0 +1,16 @@
+#spring:
+#  datasource:
+#    url: jdbc:h2:mem:job_event_storage
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password:
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/test?useUnicode=true&useSSL=false&characterEncoding=utf8&allowMultiQueries=true&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+    hikari:
+      schema: test
+server:
+  port: 8080
