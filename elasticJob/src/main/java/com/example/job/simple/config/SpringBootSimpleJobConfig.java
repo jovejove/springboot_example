@@ -60,6 +60,7 @@ public class SpringBootSimpleJobConfig implements CommandLineRunner {
                             .timeZone("GMT+08:00")
                             .jobParameter("作业参数" + i)
                             .jobErrorHandlerType("LOG")
+                            .failover(true)
                             .disabled(true)
 //                            .jobListenerTypes("MyJobListener")
                             .build())
