@@ -1,5 +1,10 @@
 package com.example;
 
+import com.alibaba.fastjson.JSON;
+
+import java.util.Enumeration;
+import java.util.Properties;
+
 /**
  * @author Administrator
  */
@@ -37,5 +42,11 @@ public enum ElasticJobType {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public static void main(String[] args) {
+        Properties properties = System.getProperties();
+        Enumeration<?> enumeration = properties.propertyNames();
+        System.out.println(JSON.toJSONString(enumeration));
     }
 }
