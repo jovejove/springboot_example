@@ -1,0 +1,13 @@
+spring:
+  profiles:
+#    active: "hello-world,sender,receiver"
+    active: "tut2,sender,receiver"
+logging:
+  level:
+    org: ERROR
+
+tutorial:
+  client:
+    duration: 10000
+server:
+  port: 8080
