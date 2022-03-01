@@ -5,6 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 
+import javax.annotation.PreDestroy;
+
 @EnableDubbo(scanBasePackages = "com.example.provider.service.impl")
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class DubboDemoProviderApplication {
@@ -30,5 +32,7 @@ public class DubboDemoProviderApplication {
 //            return registryConfig;
 //        }
 //    }
+
+
 
 }
