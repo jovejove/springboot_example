@@ -1,7 +1,7 @@
 package com.panda.spring;
 
 import com.alibaba.fastjson.JSONObject;
-import com.panda.spring.entity.ExampleBean;
+import com.panda.spring.entity.flow.ExampleBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;

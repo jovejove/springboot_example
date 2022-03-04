@@ -1,6 +1,5 @@
-package com.panda.spring.entity;
+package com.panda.spring.entity.flow;
 
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 import org.springframework.beans.BeansException;
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -17,12 +15,11 @@ import org.springframework.context.ApplicationContextAware;
  * @author Administrator
  * BeanNameAware:希望在 bean 工厂中了解其 bean 名称的 bean 实现的接口
  * ApplicationContextAware：以编程方式操作ApplicationContext创建它们的 bean
- * BeanPostProcessor:通过标记接口等填充 bean 的后处理器将实现postProcessBeforeInitialization ，而使用代理包装 bean 的后处理器通常会实现postProcessAfterInitialization
  * InitializingBean：由BeanFactory设置所有属性后需要做出反应的 bean 实现的接口：例如执行自定义初始化，或仅检查所有强制属性是否已设置。
  */
 @Data
 //@Component
-public class ExampleBean implements BeanNameAware, ApplicationContextAware, BeanPostProcessor, InitializingBean, DisposableBean {
+public class ExampleBean implements BeanNameAware, ApplicationContextAware, InitializingBean, DisposableBean {
 
 //    @Bean(initMethod = "initMethod", destroyMethod = "destroyMethod")
 //    public ExampleBean getExampleBean() {
@@ -35,7 +32,7 @@ public class ExampleBean implements BeanNameAware, ApplicationContextAware, Bean
      * Value注释的实际处理是由BeanPostProcessor执行的，这反过来意味着不能在BeanPostProcessor或BeanFactoryPostProcessor类型中使用@Value
      */
     @Value("port:${server.port}")
-    private String ultimateAnswer;
+    private String applicationContextAware;
 
     private String afterProperty;
 
@@ -53,9 +50,9 @@ public class ExampleBean implements BeanNameAware, ApplicationContextAware, Bean
         this.years = years;
     }
 
-    public ExampleBean(int years, String ultimateAnswer) {
+    public ExampleBean(int years, String applicationContextAware) {
         this.years = years;
-        this.ultimateAnswer = ultimateAnswer;
+        this.applicationContextAware = applicationContextAware;
         System.out.println("1 ExampleBean 有参构造");
     }
 
@@ -117,39 +114,8 @@ public class ExampleBean implements BeanNameAware, ApplicationContextAware, Bean
         this.applicationContext = applicationContext;
         ExampleBean exampleBean = applicationContext.getBean(this.getBeanName(), ExampleBean.class);
         System.out.println("3 ApplicationContextAware:" + exampleBean);
-        exampleBean.setUltimateAnswer("该改变值");
+        exampleBean.setApplicationContextAware("applicationContextAware");
     }
 
-    /**
-     * 在任何 bean 初始化回调（如 InitializingBean 的afterPropertiesSet或自定义 init 方法）之前将此BeanPostProcessor应用于给定的新 bean 实例。 bean 将已填充属性值。
-     * @param bean
-     * @param beanName
-     * @return
-     * @throws BeansException
-     */
-    @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-//        if ("exampleBean".equals(beanName)) {
-//            ExampleBean exampleBean = applicationContext.getBean(beanName, ExampleBean.class);
-//
-//        }
-//        System.out.println("postProcessBeforeInitialization:" + beanName);
 
-        return bean;
-    }
-
-    /**
-     * 在任何 bean 初始化回调（如 InitializingBean 的afterPropertiesSet或自定义 init 方法）之后，将此BeanPostProcessor应用于给定的新 bean 实例。 bean 将已填充属性值。
-     * @param bean
-     * @param beanName
-     * @return
-     * @throws BeansException
-     */
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-//        if ("exampleBean".equals(beanName)) {
-//            ExampleBean exampleBean = applicationContext.getBean(beanName, ExampleBean.class);
-//        }
-        System.out.println("Bean '" + beanName + "' created : " + bean.toString());
-        return bean;
-    }
 }
