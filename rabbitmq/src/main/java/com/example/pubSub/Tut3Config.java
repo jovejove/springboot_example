@@ -49,6 +49,12 @@ public class Tut3Config {
 			return new AnonymousQueue();
 		}
 
+		/**
+		 *
+		 * @param fanout 扇形交换机
+		 * @param autoDeleteQueue1
+		 * @return
+		 */
 		@Bean
 		public Binding binding1(FanoutExchange fanout, Queue autoDeleteQueue1) {
 			return BindingBuilder.bind(autoDeleteQueue1).to(fanout);

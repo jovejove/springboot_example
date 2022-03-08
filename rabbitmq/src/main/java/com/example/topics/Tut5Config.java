@@ -52,6 +52,12 @@ public class Tut5Config {
 			return new AnonymousQueue();
 		}
 
+		/**
+		 * 绑定队列到交换机后选取路由
+		 * @param topic
+		 * @param autoDeleteQueue1
+		 * @return
+		 */
 		@Bean
 		public Binding binding1a(TopicExchange topic, Queue autoDeleteQueue1) {
 			return BindingBuilder.bind(autoDeleteQueue1).to(topic).with("*.orange.*");

@@ -20,15 +20,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
- * @author Gary Russell
- * @author Scott Deeg
- * @author Arnaud Cogoluègnes
+ *  Spring bean 中@Retryable注释的全局启用程序。如果在上下文中的任何@Configuration上声明了这一点，则将代理具有可重试方法的 bean，并根据注释中的元数据处理重试
+ * @author Administrator
  */
 @SpringBootApplication
 @EnableScheduling
+@EnableAsync
 public class RabbitmqApplication {
 
 	@Profile("usage_message")

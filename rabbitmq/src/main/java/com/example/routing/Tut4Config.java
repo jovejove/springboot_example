@@ -54,6 +54,12 @@ public class Tut4Config {
 			return BindingBuilder.bind(autoDeleteQueue1).to(direct).with("orange");
 		}
 
+		/**
+		 * 绑定队列到交换机后选取路由     路由是队列与交换机之间的桥梁
+		 * @param direct
+		 * @param autoDeleteQueue1
+		 * @return
+		 */
 		@Bean
 		public Binding binding1b(DirectExchange direct, Queue autoDeleteQueue1) {
 			return BindingBuilder.bind(autoDeleteQueue1).to(direct).with("black");

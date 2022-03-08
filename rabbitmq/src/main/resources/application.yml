@@ -1,7 +1,11 @@
 spring:
   profiles:
-#    active: "hello-world,sender,receiver"
-    active: "tut2,sender,receiver"
+    #    active: "tut1,sender,receiver"
+    active: "remote,tut8,sender,receiver"
+    #    active: "tut2,sender,receiver"
+  #    active: "tut3,sender,receiver"
+  #    active: "tut4,routing,sender,receiver"
+
 logging:
   level:
     org: ERROR
@@ -11,3 +15,5 @@ tutorial:
     duration: 10000
 server:
   port: 8080
+
+

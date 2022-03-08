@@ -3,3 +3,42 @@ spring:
     host: localhost
     username: guest
     password: guest
+    # default /
+    virtual-host: /
+    listener:
+      simple:
+        # 手动确认
+#        acknowledge-mode: manual
+        # 默认情况下是否重新排队拒绝交付
+        default-requeue-rejected: false
+        retry:
+          # 开启重试 这个重试是 SpringBoot 提供的，重新执行消费者方法，而不是让 RabbitMQ 重新推送消息。
+          enabled: false
+          # 最大重试次数 default 3
+          max-attempts: 3
+          # 第一次和第二次尝试传递消息之间的持续时间。
+          initial-interval: 2000
+        # 侦听器调用程序线程的最小数量concurrentConsumers
+        concurrency: 6
+        # 侦听器调用程序线程的最大数量concurrentConsumers
+        max-concurrency: 10
+        # 每个消费者可以处理的未确认消息的最大数量
+        prefetch: 3
+
+    #机制 回调消息到达了exchange的消息
+    publisher-confirm-type: correlated
+    # 打开消息返回 回调消息没有到达queue的消息
+    publisher-returns: true
+    template:
+      # 消息到不了队列会回调
+      mandatory: true
+    # 连接超时时间 20s
+    connection-timeout: 20000
+
+
+  task:
+    execution:
+      pool:
+        max-size: 16
+        queue-capacity: 100
+        keep-alive: "10s"
