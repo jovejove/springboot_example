@@ -1,4 +1,4 @@
-package com.panda.al.双指针;
+package com.panda.双指针;
 
 import java.util.Arrays;
 

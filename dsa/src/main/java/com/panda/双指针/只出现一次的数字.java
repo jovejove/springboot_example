@@ -1,4 +1,4 @@
-package com.panda.al.双指针;
+package com.panda.双指针;
 
 /**
  * @ClassName: 只出现一次的数字.java

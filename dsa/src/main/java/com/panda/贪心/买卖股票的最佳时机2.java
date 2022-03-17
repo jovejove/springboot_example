@@ -1,4 +1,4 @@
-package com.panda.al.贪心;
+package com.panda.贪心;
 
 /**
  * @ClassName: 买卖股票的最佳时机2.java

@@ -1,4 +1,4 @@
-package com.panda.al.stack;
+package com.panda.stack;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

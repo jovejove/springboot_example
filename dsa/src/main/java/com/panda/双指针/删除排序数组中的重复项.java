@@ -1,4 +1,4 @@
-package com.panda.al.双指针;
+package com.panda.双指针;
 
 /**
  * @ClassName: 删除排序数组中的重复项.java

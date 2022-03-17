@@ -1,4 +1,4 @@
-package com.panda.al.贪心;
+package com.panda.贪心;
 
 import java.util.Arrays;
 
