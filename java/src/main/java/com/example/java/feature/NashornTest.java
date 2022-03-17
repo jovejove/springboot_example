@@ -1,4 +1,4 @@
-package com.panda.design.java8;
+package com.example.java.feature;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;

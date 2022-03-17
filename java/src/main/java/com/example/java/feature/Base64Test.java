@@ -1,4 +1,4 @@
-package com.panda.design.java8;
+package com.example.java.feature;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;

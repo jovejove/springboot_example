@@ -1,4 +1,4 @@
-package com.panda.design.java8;
+package com.example.java.feature;
 
 /**
  * Lambda 表达式免去了使用匿名方法的麻烦，并且给予Java简单但是强大的函数化的编程能力(函数作为参数传递进方法中)
