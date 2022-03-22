@@ -10,7 +10,12 @@ import java.util.List;
  * vm args: -Xms20m -Xmx20m -XX:+HeapDumpOnOutOfMemoryError  -XX:HeapDumpPath=D:\workspace\springboot_example
  */
 public class HeapOOM {
+
+    private byte[] bytes = new byte[1024];
+
+
     public static void main(String[] args) {
+
         List<HeapOOM> list = new ArrayList<>();
         while (true) {
             list.add(new HeapOOM());
