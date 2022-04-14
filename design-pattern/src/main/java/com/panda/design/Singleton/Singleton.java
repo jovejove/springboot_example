@@ -1,4 +1,4 @@
-package com.panda.pattern.Singleton;
+package com.panda.design.Singleton;
 
 /**
  * @ClassName: Singleton.java
