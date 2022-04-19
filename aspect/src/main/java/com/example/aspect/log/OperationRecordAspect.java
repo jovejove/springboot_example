@@ -1,6 +1,7 @@
 package com.example.aspect.log;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.aspect.annotation.OperationRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.Signature;
@@ -21,7 +22,7 @@ import java.lang.reflect.Method;
 @Aspect
 @Component
 @Slf4j
-public class LogRecord {
+public class OperationRecordAspect {
 
 //    @Pointcut("execution(public * com.example.aspect.controller..*.*(..))")
     @Pointcut("@annotation(com.example.aspect.annotation.OperationRecord)")
@@ -34,6 +35,8 @@ public class LogRecord {
         Object[] args = joinPoint.getArgs();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
+        OperationRecord annotation = method.getAnnotation(OperationRecord.class);
+        log.info("操作描述：{}",annotation.operationDesc());
         log.info("{} . {} : 请求参数：{}",method.getDeclaringClass().getName(),method.getName(), JSONObject.toJSONString(args));
     }
 

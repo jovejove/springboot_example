@@ -16,4 +16,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface OperationRecord {
+    /**
+     * 操作描述
+     */
+    String operationDesc() default "";
 }

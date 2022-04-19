@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/")
 public class ExportController {
 
-    @OperationRecord
+    @OperationRecord(operationDesc = "新增用户")
     @PostMapping("/export")
     public Object export(@RequestBody User user) {
         return "export:"+ JSONObject.toJSONString(user);
