@@ -1,16 +1,55 @@
 package com.example.java.feature;
 
+import com.example.java.User;
+import org.springframework.util.Assert;
+
 import java.util.Optional;
 
 /**
- * Optional 类是一个可以为null的容器对象。如果值存在则isPresent()方法会返回true，调用get()方法会返回该对象
- * 解决空指针异常
+ * Optional 类是一个可以为null的容器对象。
+ * 虽然链式编程代码优雅，但是代码可读性降低
  *
  * @author Administrator
  */
 public class OptionalTest {
-    public static void main(String args[]) {
+    public static void main(String args[]) throws Exception {
+        User user = null;
 
+        // if null
+//        Optional.ofNullable(user).orElseThrow(() -> new Exception("user not exists"));
+        Assert.notNull(user,"参数异常");
+
+        // if null give a default value
+        user = Optional.ofNullable(user).orElse(createUser());
+        user = Optional.ofNullable(user).orElseGet(OptionalTest::createUser);
+
+        // instance not null
+        Optional.ofNullable(user).ifPresent(OptionalTest::doSomething);
+
+        // multi null
+        System.out.println(getCity(user));
+
+        // if else
+        user = Optional.ofNullable(user).filter(u -> "cat".equals(u.getName())).orElseGet(() -> new User(2L, "cat", 18, null));
+        System.out.println(user);
+    }
+
+    static String getCity(User user) throws Exception {
+        return Optional.ofNullable(user).map(User::getAddress).map(User.Address::getCity).orElseThrow(() -> new Exception("取值错误"));
+    }
+
+    public static User createUser() {
+        User user = new User();
+        user.setName("panda");
+        user.setAddress(new User.Address("gz"));
+        return user;
+    }
+
+    static void doSomething(User user) {
+        System.out.println(user);
+    }
+
+    static void test2() {
         String nullVal = null;
         String nonNullVal = "june";
 
@@ -30,7 +69,6 @@ public class OptionalTest {
         // 返回映射值
         Optional<String> stringOptional = optional2.map(s -> "map lab:" + s);
         stringOptional.ifPresent(System.out::println);
-
     }
 
     public static void test1() {
