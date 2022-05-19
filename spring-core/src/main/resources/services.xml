@@ -6,7 +6,7 @@
 
 
     <!--    use the constructor parameter name for value disambiguation 消歧义-->
-    <bean id="exampleBean" class="com.panda.spring.entity.flow.ExampleBean" init-method="initMethod"
+    <bean id="exampleBeanXml" class="com.panda.spring.life.ExampleBeanXml" init-method="initMethod"
           destroy-method="destroyMethod">
         <constructor-arg name="years" value="2"/>
     </bean>

@@ -2,7 +2,7 @@ package com.panda.spring;
 
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.panda.spring.entity.flow.ExampleBean;
+import com.panda.spring.life.ExampleBeanXml;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -17,7 +17,7 @@ public class ContainerApp {
         ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
 
         // retrieve configured instance
-        ExampleBean exampleBean = context.getBean("exampleBean", ExampleBean.class);
+        ExampleBeanXml exampleBean = context.getBean("exampleBeanXml", ExampleBeanXml.class);
 
         // use configured instance
         log.info(JSONObject.toJSONString(exampleBean, SerializerFeature.WriteMapNullValue));

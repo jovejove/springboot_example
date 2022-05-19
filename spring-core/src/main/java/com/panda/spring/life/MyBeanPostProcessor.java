@@ -1,8 +1,9 @@
-package com.panda.spring.entity.flow;
+package com.panda.spring.life;
 
-import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.core.Ordered;
+import org.springframework.core.PriorityOrdered;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
  * 而使用代理包装 bean 的后处理器通常会实现postProcessAfterInitialization
  */
 @Component
-public class MyBeanPostProcessor implements BeanPostProcessor {
+public class MyBeanPostProcessor implements BeanPostProcessor{
 
     /**
      * 在任何 bean 初始化回调（如 InitializingBean 的afterPropertiesSet或自定义 init 方法）之前将此BeanPostProcessor应用于给定的新 bean 实例。 bean 将已填充属性值。
@@ -22,9 +23,16 @@ public class MyBeanPostProcessor implements BeanPostProcessor {
      */
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        if (bean instanceof ExampleBean) {
-            System.out.println("BeanPostProcessor.postProcessBeforeInitialization Bean '" + beanName + "' created : " + JSONObject.toJSONString(bean));
+        if (bean instanceof ExampleBeanXml) {
+            System.out.println("BeanPostProcessor.postProcessBeforeInitialization Bean '" + beanName + "' created : " + bean);
         }
+
+
+        if (bean instanceof MyServiceImpl) {
+            MyService myService = new MyServiceProxy((MyServiceImpl) bean).getProxy();
+            System.out.println("postProcessBeforeInitialization:"+myService);
+        }
+
         return bean;
     }
 
@@ -38,9 +46,20 @@ public class MyBeanPostProcessor implements BeanPostProcessor {
      */
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (bean instanceof ExampleBean) {
-            System.out.println("BeanPostProcessor.postProcessAfterInitialization Bean '" + beanName + "' created : " + JSONObject.toJSONString(bean));
+        if (bean instanceof ExampleBeanXml) {
+            ((ExampleBeanXml) bean).setBeanPostAfterInitialization("setBeanPostAfterInitialization");
+            System.out.println("BeanPostProcessor.postProcessAfterInitialization Bean '" + beanName + "' created : " + bean);
         }
+
+        // 初始化后使用代理对象
+        if (bean instanceof MyService) {
+//            MyService myService = new MyServiceProxy((MyService) bean).getProxy();
+            System.out.println("postProcessAfterInitialization:"+bean);
+//            return myService;
+        }
+
         return bean;
     }
+
+
 }
