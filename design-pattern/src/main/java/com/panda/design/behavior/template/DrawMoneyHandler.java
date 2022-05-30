@@ -1,7 +1,6 @@
-package com.panda.design.template;//取钱业务的实现类
+package com.panda.design.behavior.template;//取钱业务的实现类
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;

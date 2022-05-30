@@ -1,4 +1,4 @@
-package com.panda.design.behaviorType.Chain.common;
+package com.panda.design.behavior.chain.common;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.chain.Command;

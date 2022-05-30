@@ -1,6 +1,4 @@
-package com.panda.design.service.impl;
-
-import com.panda.design.service.Strategy;
+package com.panda.design.behavior.strategy;
 
 public class OperationMultiply implements Strategy {
    @Override

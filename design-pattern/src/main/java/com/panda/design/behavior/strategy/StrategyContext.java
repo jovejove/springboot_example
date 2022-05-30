@@ -1,6 +1,4 @@
-package com.panda.design.context;
-
-import com.panda.design.service.Strategy;
+package com.panda.design.behavior.strategy;
 
 public class StrategyContext {
     private Strategy strategy;

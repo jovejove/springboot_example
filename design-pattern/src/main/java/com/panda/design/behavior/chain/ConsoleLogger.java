@@ -1,4 +1,4 @@
-package com.panda.design.behaviorType.Chain;
+package com.panda.design.behavior.chain;
 
 /**
  * @author Administrator

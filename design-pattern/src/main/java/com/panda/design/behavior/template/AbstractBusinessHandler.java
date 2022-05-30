@@ -1,4 +1,4 @@
-package com.panda.design.template;
+package com.panda.design.behavior.template;
 
 import org.apache.commons.lang.math.RandomUtils;
 

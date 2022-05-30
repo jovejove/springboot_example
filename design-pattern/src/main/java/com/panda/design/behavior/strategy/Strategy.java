@@ -1,4 +1,4 @@
-package com.panda.design.service;
+package com.panda.design.behavior.strategy;
 
 /**
  * 策略模式
