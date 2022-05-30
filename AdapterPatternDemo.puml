@@ -1,0 +1,34 @@
+@startuml
+class com.panda.design.structure.adapter.AdapterPatternDemo {
++ {static} void main(String[])
+}
+class com.panda.design.structure.adapter.MediaAdapter {
+~ AdvancedMediaPlayer advancedMusicPlayer
++ void play(String,String)
+}
+interface com.panda.design.structure.adapter.AdvancedMediaPlayer {
++ void playVlc(String)
++ void playMp4(String)
+}
+class com.panda.design.structure.adapter.AudioPlayer {
+~ MediaAdapter mediaAdapter
++ void play(String,String)
+}
+interface com.panda.design.structure.adapter.MediaPlayer {
++ void play(String,String)
+}
+class com.panda.design.structure.adapter.VlcPlayer {
++ void playVlc(String)
++ void playMp4(String)
+}
+class com.panda.design.structure.adapter.Mp4Player {
++ void playVlc(String)
++ void playMp4(String)
+}
+
+
+com.panda.design.structure.adapter.MediaPlayer <|.. com.panda.design.structure.adapter.MediaAdapter
+com.panda.design.structure.adapter.MediaPlayer <|.. com.panda.design.structure.adapter.AudioPlayer
+com.panda.design.structure.adapter.AdvancedMediaPlayer <|.. com.panda.design.structure.adapter.VlcPlayer
+com.panda.design.structure.adapter.AdvancedMediaPlayer <|.. com.panda.design.structure.adapter.Mp4Player
+@enduml
