@@ -1,0 +1,60 @@
+@startuml
+class com.panda.design.creative.builder.Pepsi {
++ float price()
++ String name()
+}
+interface com.panda.design.creative.builder.Packing {
++ String pack()
+}
+interface com.panda.design.creative.builder.Item {
++ String name()
++ Packing packing()
++ float price()
+}
+class com.panda.design.creative.builder.VegBurger {
++ float price()
++ String name()
+}
+class com.panda.design.creative.builder.Meal {
+- List<Item> items
++ void addItem(Item)
++ float getCost()
++ void showItems()
+}
+abstract class com.panda.design.creative.builder.Burger {
++ Packing packing()
++ {abstract}float price()
+}
+abstract class com.panda.design.creative.builder.ColdDrink {
++ Packing packing()
++ {abstract}float price()
+}
+class com.panda.design.creative.builder.Wrapper {
++ String pack()
+}
+class com.panda.design.creative.builder.Coke {
++ float price()
++ String name()
+}
+class com.panda.design.creative.builder.Bottle {
++ String pack()
+}
+class com.panda.design.creative.builder.MealBuilder {
++ Meal prepareVegMeal()
++ Meal prepareNonVegMeal()
+}
+class com.panda.design.creative.builder.ChickenBurger {
++ float price()
++ String name()
+}
+
+
+com.panda.design.creative.builder.ColdDrink <|-- com.panda.design.creative.builder.Pepsi
+com.panda.design.creative.builder.Burger <|-- com.panda.design.creative.builder.VegBurger
+com.panda.design.creative.builder.Item <|.. com.panda.design.creative.builder.Burger
+com.panda.design.creative.builder.Item <|.. com.panda.design.creative.builder.ColdDrink
+com.panda.design.creative.builder.Packing <|.. com.panda.design.creative.builder.Wrapper
+com.panda.design.creative.builder.ColdDrink <|-- com.panda.design.creative.builder.Coke
+com.panda.design.creative.builder.Packing <|.. com.panda.design.creative.builder.Bottle
+com.panda.design.creative.builder.Burger <|-- com.panda.design.creative.builder.ChickenBurger
+@enduml

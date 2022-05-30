@@ -1,0 +1,6 @@
+@startuml
+class com.panda.design.creative.Singleton.Singleton {
+- {static} Singleton singleton
++ {static} Singleton getInstance()
+}
+@enduml

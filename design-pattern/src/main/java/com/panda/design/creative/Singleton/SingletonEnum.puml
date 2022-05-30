@@ -1,0 +1,6 @@
+@startuml
+enum com.panda.design.creative.Singleton.SingletonEnum {
++  INSTANCE
++ void whateverMethod()
+}
+@enduml

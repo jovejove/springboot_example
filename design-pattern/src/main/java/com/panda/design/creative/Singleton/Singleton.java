@@ -1,9 +1,9 @@
-package com.panda.design.Singleton;
+package com.panda.design.creative.Singleton;
 
 /**
  * @ClassName: Singleton.java
  * @Author: jjl
- * @Description:
+ * @Description: 双重检查锁  意图：保证一个类仅有一个实例，并提供一个访问它的全局访问点。
  * @Date: 2021-07-23
  * @Version: 1.0
  */

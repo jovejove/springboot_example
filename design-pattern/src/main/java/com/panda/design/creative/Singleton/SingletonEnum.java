@@ -1,4 +1,4 @@
-package com.panda.design.Singleton;
+package com.panda.design.creative.Singleton;
 
 /**
  * @ClassName: SingletonEnum.java

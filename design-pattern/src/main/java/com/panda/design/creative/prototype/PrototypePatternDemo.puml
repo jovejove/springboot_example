@@ -1,0 +1,34 @@
+@startuml
+class com.panda.design.creative.prototype.Square {
++ void draw()
+}
+class com.panda.design.creative.prototype.Circle {
++ void draw()
+}
+class com.panda.design.creative.prototype.ShapeCache {
+- {static} Hashtable<String,Shape> shapeMap
++ {static} Shape getShape(String)
++ {static} void loadCache()
+}
+class com.panda.design.creative.prototype.Rectangle {
++ void draw()
+}
+abstract class com.panda.design.creative.prototype.Shape {
+- String id
+# String type
+~ {abstract}void draw()
++ String getType()
++ String getId()
++ void setId(String)
++ Object clone()
+}
+class com.panda.design.creative.prototype.PrototypePatternDemo {
++ {static} void main(String[])
+}
+
+
+com.panda.design.creative.prototype.Shape <|-- com.panda.design.creative.prototype.Square
+com.panda.design.creative.prototype.Shape <|-- com.panda.design.creative.prototype.Circle
+com.panda.design.creative.prototype.Shape <|-- com.panda.design.creative.prototype.Rectangle
+com.panda.design.creative.prototype.Cloneable <|.. com.panda.design.creative.prototype.Shape
+@enduml
