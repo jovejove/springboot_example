@@ -12,8 +12,6 @@ public class DrawMoneyHandler extends AbstractBusinessHandler {
     @Override
     public void handle() {
         System.out.println("draw 1000");
-
-
     }
 
     public static void main(String[] args) {
@@ -23,8 +21,8 @@ public class DrawMoneyHandler extends AbstractBusinessHandler {
         // 供给型函数式接口
         Supplier<ArrayList> runnable = ArrayList::new;
 
-        // 消费性函数式接口
-        Consumer<String> stringConsumer = (s) -> System.out.println(s.length());
+        // 消费性函数式接口 Consumer<String> stringConsumer = (s) -> System.out.println(s);
+        Consumer<String> stringConsumer = System.out::println;
         Stream.of("ab", "abc", "a", "abcd").forEach(stringConsumer);
     }
 }

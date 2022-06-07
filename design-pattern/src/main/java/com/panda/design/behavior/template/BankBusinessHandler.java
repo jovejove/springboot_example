@@ -12,6 +12,10 @@ import java.util.function.Supplier;
  * @description:
  */
 public class BankBusinessHandler {
+
+    /**
+     * 模板方法1
+     */
     private void execute(Consumer<BigDecimal> consumer) {
         getNumber();
         consumer.accept(null);
@@ -20,9 +24,9 @@ public class BankBusinessHandler {
     }
 
     /**
-     * 模板方法
+     * 模板方法2
      */
-    protected void execute(Supplier<String> supplier, Consumer<BigDecimal> consumer) {
+    private void execute(Supplier<String> supplier, Consumer<BigDecimal> consumer) {
         String number = supplier.get();
         System.out.println(number);
         if (number.startsWith("vip")) {

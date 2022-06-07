@@ -27,7 +27,7 @@ spring:
 
     #机制 回调消息到达了exchange的消息
     publisher-confirm-type: correlated
-    # 打开消息返回 回调消息没有到达queue的消息
+    # 打开消息返回 回调消息没有到达queue的消息  	# 开启发送端消息抵达队列的确认
     publisher-returns: true
     template:
       # 消息到不了队列会回调
