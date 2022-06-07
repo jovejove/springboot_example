@@ -1,0 +1,26 @@
+@startuml
+interface com.panda.design.behavior.strategy.Strategy {
+~ int doOperation(int,int)
+}
+class com.panda.design.behavior.strategy.OperationSubtract {
++ int doOperation(int,int)
+}
+class com.panda.design.behavior.strategy.OperationAdd {
++ int doOperation(int,int)
+}
+class com.panda.design.behavior.strategy.StrategyContext {
+- Strategy strategy
++ int executeStrategy(int,int)
+}
+class com.panda.design.behavior.strategy.StrategyDemo {
++ {static} void main(String[])
+}
+class com.panda.design.behavior.strategy.OperationMultiply {
++ int doOperation(int,int)
+}
+
+
+com.panda.design.behavior.strategy.Strategy <|.. com.panda.design.behavior.strategy.OperationSubtract
+com.panda.design.behavior.strategy.Strategy <|.. com.panda.design.behavior.strategy.OperationAdd
+com.panda.design.behavior.strategy.Strategy <|.. com.panda.design.behavior.strategy.OperationMultiply
+@enduml
