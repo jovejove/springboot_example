@@ -10,7 +10,7 @@ import java.util.Arrays;
 public class SelectSort {
 
     public static void main(String[] args) {
-        int[] arr = {65461, 34, 868, 4, 5, 2, 3, 99, 5345, 34, 6564, 434};
+        int[] arr = {65461, 34, 868, 4, 5, 2, 3, 99, 5345,3, 34, 2,6564, 434};
         System.out.println(Arrays.toString(arr));
         selectSort(arr);
         System.out.println(Arrays.toString(arr));
