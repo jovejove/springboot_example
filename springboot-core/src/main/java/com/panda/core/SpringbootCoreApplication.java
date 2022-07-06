@@ -1,6 +1,5 @@
 package com.panda.core;
 
-import com.panda.core.listener.MyApplicationStartingEventListener;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,8 +16,6 @@ public class SpringbootCoreApplication {
 
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(SpringbootCoreApplication.class);
-        // 添加启动事件
-        application.addListeners(new MyApplicationStartingEventListener());
         // disabled banner
         application.setBannerMode(Banner.Mode.OFF);
         // 禁止命令行参数加入到环境变量

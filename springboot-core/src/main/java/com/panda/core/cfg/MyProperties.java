@@ -1,11 +1,8 @@
 package com.panda.core.cfg;
 
-import com.sun.istack.internal.NotNull;
-import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.boot.convert.DurationUnit;
-import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotEmpty;
 import java.net.InetAddress;
@@ -20,17 +17,15 @@ import java.util.List;
  * @author Administrator
  */
 @ConfigurationProperties("my.service")
-@Validated
 public class MyProperties {
 
     private boolean enabled;
-    @NotNull
     private InetAddress remoteAddress;
 
     @DurationUnit(ChronoUnit.SECONDS)
-    private Duration sessionTimeout = Duration.ofSeconds(30);
+    private Duration sessionTimeout;
 
-    private Duration readTimeout = Duration.ofMillis(1000);
+    private Duration readTimeout;
 
     public MyProperties(@DurationUnit(ChronoUnit.SECONDS) @DefaultValue("30s") Duration sessionTimeout,
                         @DefaultValue("1000ms") Duration readTimeout) {
@@ -38,6 +33,8 @@ public class MyProperties {
         this.readTimeout = readTimeout;
     }
 
+    public MyProperties() {
+    }
 
     public Duration getSessionTimeout() {
         return sessionTimeout;
