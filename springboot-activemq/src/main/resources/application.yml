@@ -6,6 +6,9 @@ spring:
     #默认包名安全 （支持序列化反序列化）
     packages:
       trust-all: true
+    pool:
+      enabled: true
+      max-connections: 10
   #支持topic模式
   jms:
     pub-sub-domain: true
