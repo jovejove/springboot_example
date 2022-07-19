@@ -16,6 +16,16 @@ import java.util.List;
 @RestController
 public class PerformanceController {
 
+
+
+
+    @RequestMapping(value = "/test0")
+    public String test0(HttpServletRequest request) {
+        ThreadLocal<Byte[]> localVariable = new ThreadLocal<Byte[]>();
+        localVariable.set(new Byte[4096*1024]);// 为线程添加变量
+        return "success";
+    }
+
     @RequestMapping("/test")
     public String test1( HttpServletRequest request) {
         List temp = new ArrayList();
@@ -23,6 +33,7 @@ public class PerformanceController {
         temp.add(b);
         return "success";
     }
+
 
     public double myPow(double x, int n) {
         if (n == 0) {
